@@ -1,7 +1,7 @@
 import React from 'react'
 import { Route, Routes } from 'react-router-dom'
-import HomePage from './pages/HomePage'
-import Forum from './pages/Forum'
+import HomePage from './Pages/Homepage'
+import Forum from './Pages/Forum'
 import Services from './pages/Services'
 import Chatbox from './pages/Chatbox'
 
