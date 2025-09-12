@@ -80,7 +80,7 @@ const HomePage = () => {
 
 
             <div id="detail" className='flex flex-col justify-between'>
-                <div className='className="w-full text-[#ffc130] py-16'>
+                <div className='className="w-full bg-[#193701] text-[#ffc130] py-16'>
                     <div className='mx-auto px-6'>
                         <h2 className="text-3xl text-[#ffc130] md:text-4xl font-bold text-center mb-12">
                             VÌ SAO CHỌN QUAILCARE AI
