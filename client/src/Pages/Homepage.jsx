@@ -67,7 +67,7 @@ const HomePage = () => {
 
             <div id="about" className='w-full bg-gray-50 py-20'>
                 <div className="max-w-6xl mx-auto text-center">
-                    <h2 className="text-3xl text-[#7d4229] font-bold text-brown-700 mb-6">
+                    <h2 className="text-3xl text-[#ffc130] font-bold text-brown-700 mb-6">
                         PHÁT TRIỂN HOẠT ĐỘNG CHĂN NUÔI THÔNG MINH
                     </h2>
                     <p className="text-lg text-gray-600">
@@ -80,9 +80,9 @@ const HomePage = () => {
 
 
             <div id="detail" className='flex flex-col justify-between'>
-                <div className='className="w-full bg-[#7d4229] py-16 text-white'>
+                <div className='className="w-full text-[#ffc130] py-16'>
                     <div className='mx-auto px-6'>
-                        <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
+                        <h2 className="text-3xl text-[#ffc130] md:text-4xl font-bold text-center mb-12">
                             VÌ SAO CHỌN QUAILCARE AI
                         </h2>
 
@@ -93,7 +93,7 @@ const HomePage = () => {
                                         <GrTechnology className="text-orange-600 text-3xl" />
                                     </div>
                                 </div>
-                                <h3 className="text-xl font-bold text-[#7d4229] mb-3">
+                                <h3 className="text-xl font-bold text-[#ffc130] mb-3">
                                     CÔNG NGHỆ TIÊN TIẾN
                                 </h3>
                                 <p className="text-gray-600">
@@ -108,7 +108,7 @@ const HomePage = () => {
                                         <ImUserTie className="text-orange-600 text-3xl" />
                                     </div>
                                 </div>
-                                <h3 className="text-xl font-bold text-[#7d4229] mb-3">
+                                <h3 className="text-xl font-bold text-[#ffc130] mb-3">
                                     HỖ TRỢ CHUYÊN NGHIỆP
                                 </h3>
                                 <p className="text-gray-600">
@@ -124,7 +124,7 @@ const HomePage = () => {
                                         <CiCircleCheck className="text-orange-600 text-3xl" style={{ strokeWidth: 2 }} />
                                     </div>
                                 </div>
-                                <h3 className="text-xl font-bold text-[#7d4229] mb-3">
+                                <h3 className="text-xl font-bold text-[#ffc130] mb-3">
                                     5 NĂM KINH NGHIỆM
                                 </h3>
                                 <p className="text-gray-600">
@@ -142,43 +142,43 @@ const HomePage = () => {
                     <div className='max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-6 mt-8 px-6'>
 
                         {/* card1 */}
-                        <div className="bg-[#7d4229] text-white text-center rounded-xl shadow-lg p-6 hover:scale-105 transition-transform">
+                        <div className="bg-[#193701] text-white text-center rounded-xl shadow-lg p-6 hover:scale-105 transition-transform">
                             <div className="flex justify-center mb-4">
                                 <div className="bg-white/20 p-3 rounded-full">
                                     <FaShoppingCart className="text-white text-3xl" />
                                 </div>
                             </div>
-                            <h3 className="text-lg font-semibold">Miễn phí tư vấn</h3>
+                            <h3 className="text-lg text-[#ffc130] font-semibold">Miễn phí tư vấn</h3>
                         </div>
 
                         {/* card_2 */}
-                        <div className="bg-[#7d4229] text-white text-center rounded-xl shadow-lg p-6 hover:scale-105 transition-transform">
+                        <div className="bg-[#193701] text-white text-center rounded-xl shadow-lg p-6 hover:scale-105 transition-transform">
                             <div className="flex justify-center mb-4">
                                 <div className="bg-white/20 p-3 rounded-full">
                                     <CiCircleCheck className="text-white text-3xl" style={{ strokeWidth: 2 }} />
                                 </div>
                             </div>
-                            <h3 className="text-lg font-semibold">Bảo hành 1 năm</h3>
+                            <h3 className="text-lg text-[#ffc130] font-semibold">Bảo hành 1 năm</h3>
                         </div>
 
                         {/* card_3 */}
-                        <div className="bg-[#7d4229] text-white text-center rounded-xl shadow-lg p-6 hover:scale-105 transition-transform">
+                        <div className="bg-[#193701] text-white text-center rounded-xl shadow-lg p-6 hover:scale-105 transition-transform">
                             <div className="flex justify-center mb-4">
                                 <div className="bg-white/20 p-3 rounded-full">
                                     <MdLocalAtm className="text-white text-3xl" />
                                 </div>
                             </div>
-                            <h3 className="text-lg font-semibold">Thanh toán linh hoạt</h3>
+                            <h3 className="text-lg text-[#ffc130] font-semibold">Thanh toán linh hoạt</h3>
                         </div>
 
                         {/* card_4 */}
-                        <div className="bg-[#7d4229] text-white text-center rounded-xl shadow-lg p-6 hover:scale-105 transition-transform">
+                        <div className="bg-[#193701] text-white text-center rounded-xl shadow-lg p-6 hover:scale-105 transition-transform">
                             <div className="flex justify-center mb-4">
                                 <div className="bg-white/20 p-3 rounded-full">
                                     <FaRegClock className="text-white text-3xl" />
                                 </div>
                             </div>
-                            <h3 className="text-lg font-semibold">Hỗ trợ 24/7</h3>
+                            <h3 className="text-lg text-[#ffc130] font-semibold">Hỗ trợ 24/7</h3>
                         </div>
                     </div>
                 </div>
@@ -188,7 +188,7 @@ const HomePage = () => {
             {/* TẦM NHÌN VÀ SỨ MỆNH */}
             <div className='w-full py-18'>
                 <div className='max-w-6xl mx-auto px-6'>
-                    <h2 className="text-3xl md:text-4xl font-bold text-center text-[#7d4229] mb-12">
+                    <h2 className="text-3xl md:text-4xl font-bold text-center text-[#ffc130] mb-12">
                         TẦM NHÌN - SỨ MỆNH
                     </h2>
 
@@ -240,7 +240,7 @@ const HomePage = () => {
             {/* ĐA DẠNG GIẢI PHÁP */}
             <div className='w-full py-20'>
                 <div className='max-w-6xl mx-auto px-6'>
-                    <h2 className="text-3xl md:text-4xl font-bold text-center text-[#7d4229] mb-12">
+                    <h2 className="text-3xl md:text-4xl font-bold text-center text-[#ffc130] mb-12">
                         ĐA DẠNG GIẢI PHÁP
                     </h2>
 
