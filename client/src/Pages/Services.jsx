@@ -1,6 +1,6 @@
 import React from 'react'
 import Header from '../Components/Header'
-import Standard from '../assets/standard.png'
+import Standard from '../assets/Standard.png'
 import Premium from '../assets/Premium.png'
 import PremiumPLus from '../assets/PremiumPlus.png'
 
