@@ -2,8 +2,8 @@ import React from 'react'
 import { Route, Routes } from 'react-router-dom'
 import HomePage from './Pages/Homepage'
 import Forum from './Pages/Forum'
-import Services from './pages/Services'
-import Chatbox from './pages/Chatbox'
+import Services from './Pages/Services'
+import Chatbox from './Pages/Chatbox'
 
 const App = () => {
   return (
