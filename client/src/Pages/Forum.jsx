@@ -63,7 +63,7 @@ const Forum = () => {
       {/* Search + Create Post */}
       <div className="bg-white border-b">
         <div className="max-w-7xl mx-auto flex justify-between items-center py-6 px-6">
-          <h2 className="text-2xl font-bold text-[#854836]">Diễn đàn QuailCare AI</h2>
+          <h2 className="text-2xl font-bold text-[#ffc130]">Diễn đàn QuailCare AI</h2>
           <div className="flex items-center gap-4">
             <div className="relative">
               <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -73,39 +73,39 @@ const Forum = () => {
                 className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg w-64"
               />
             </div>
-            <button className="bg-[#FFB22C] text-white px-4 py-2 rounded-lg">Tạo bài viết</button>
+            <button className="bg-[#193701] text-white px-4 py-2 rounded-lg">Tạo bài viết</button>
           </div>
         </div>
       </div>
 
       {/* Categories */}
       <div className="max-w-7xl mx-auto py-8 px-6">
-        <h3 className="flex items-center gap-2 text-xl font-bold text-[#854836] mb-4">
+        <h3 className="flex items-center gap-2 text-xl font-bold text-[#ffc130] mb-4">
           <FaRegCommentDots /> Danh mục diễn đàn
         </h3>
         {forumCategories.map(cat => (
           <div key={cat.id} className="bg-white p-4 mb-4 rounded-lg shadow-sm flex justify-between">
             <div>
-              <h4 className="text-lg font-semibold text-[#854836]">{cat.title}</h4>
+              <h4 className="text-lg font-semibold text-[#ffc130]">{cat.title}</h4>
               <p className="text-gray-600">{cat.description}</p>
               <p className="text-sm text-gray-500">{cat.topics} chủ đề • {cat.posts} bài viết</p>
             </div>
             <div className="text-right text-sm">
               <p>{cat.lastPost}</p>
-              <p className="font-medium text-[#854836]">{cat.lastUser}</p>
+              <p className="font-medium text-[#ffc130]">{cat.lastUser}</p>
             </div>
           </div>
         ))}
 
         {/* Recent Posts */}
-        <h3 className="flex items-center gap-2 text-xl font-bold text-[#854836] mt-8 mb-4">
+        <h3 className="flex items-center gap-2 text-xl font-bold text-[#ffc130] mt-8 mb-4">
           <FaClock /> Bài viết gần đây
         </h3>
         {recentPosts.map(post => (
           <div key={post.id} className="bg-white p-4 mb-2 rounded-lg shadow-sm hover:bg-gray-50">
             <div className="flex justify-between items-start">
               <div>
-                <h4 className="font-medium text-[#854836] flex items-center gap-2">
+                <h4 className="font-medium text-[#ffc130] flex items-center gap-2">
                   {post.isPinned && <FaThumbtack className="text-orange-500" />}
                   {post.title}
                 </h4>
@@ -124,7 +124,7 @@ const Forum = () => {
 
       {/* Floating Button */}
       <div className="fixed bottom-8 right-8">
-        <button className="bg-[#854836] w-14 h-14 rounded-full shadow-lg flex items-center justify-center">
+        <button className="bg-[#193701] w-14 h-14 rounded-full shadow-lg flex items-center justify-center">
           <FaPhone className="text-white w-6 h-6" />
         </button>
       </div>
