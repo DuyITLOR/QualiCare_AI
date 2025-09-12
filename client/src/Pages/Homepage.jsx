@@ -1,5 +1,5 @@
 import React from 'react'
-import Header from '../Components/header'
+import Header from '../Components/Header'
 import banner from '../assets/quail-nest.png'
 import { GrTechnology } from "react-icons/gr";
 import { ImUserTie } from "react-icons/im";

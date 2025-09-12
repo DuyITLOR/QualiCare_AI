@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { FaPlus, FaPaperPlane, FaRobot, FaUserCircle, FaChevronRight } from 'react-icons/fa';
-import Header from '../Components/header';
+import Header from '../Components/Header';
 
 const Chatbox = () => {
   const [messages, setMessages] = useState([

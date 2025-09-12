@@ -4,7 +4,7 @@ import {
   FaRegCommentDots, FaUsers, FaEye, FaClock, 
   FaThumbtack, FaStar, FaUserCircle
 } from "react-icons/fa"
-import Header from '../Components/header'
+import Header from '../Components/Header'
 
 
 const Forum = () => {
