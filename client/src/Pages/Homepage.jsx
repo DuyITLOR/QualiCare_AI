@@ -25,13 +25,11 @@ const HomePage = () => {
                 <div className='mx-auto flex flex-col md:flex-row items-center justify-between px-6 py-16 gap-10'>
                     <div className='flex-1'>
                         <h1 className='text-3xl text-[#ffc130] font-extrabold md:text-6xl leading-tight mb-6'>
-                            ĐƯA CÔNG NGHỆ <br /> ĐẾN TAY NHÀ NÔNG
+                            NÂNG TẦM CHĂN NUÔI <br/> MỞ LỐI THÀNH CÔNG
                         </h1>
 
                         <p className="text-lg md:text-xl text-gray-200 leading-9 mb-8">
-                            Trở thành giải pháp công nghệ nông nghiệp thông minh đáng tin cậy và
-                            dễ tiếp cận nhất cho các hộ chăn nuôi vừa và nhỏ, xuất phát từ nhu
-                            cầu thực tế của người nuôi chim cút quy mô hộ gia đình.
+                         Trở thành giải pháp công nghệ nông nghiệp thông minh, đáng tin cậy và dễ tiếp cận, đồng hành cùng nông dân nâng tầm giá trị nông sản Việt.
                         </p>
 
                         <div className='flex space-x-4'>
