@@ -1,0 +1,102 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model accounts {
+  userId       BigInt         @id @default(autoincrement())
+  phoneNumber  String?
+  passwordHash String
+  name         String?
+  date         DateTime?      @db.Date
+  email        String         @unique
+  createdAt    DateTime       @default(now()) @db.Timestamptz(6)
+  chatSessions chatSessions[]
+  userCages    userCages[]
+}
+
+model alerts {
+  id       BigInt   @id @default(autoincrement())
+  cageId   String
+  dateTime DateTime @db.Timestamptz(6)
+  message  String
+  cages    cages    @relation(fields: [cageId], references: [cageId], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([cageId, dateTime(sort: Desc)], map: "idxAlertsCageTime")
+}
+
+model cages {
+  cageId        String          @id
+  alerts        alerts[]
+  deviceControl deviceControl[]
+  sensorData    sensorData[]
+  userCages     userCages[]
+}
+
+model chatMessages {
+  messageId    BigInt       @id @default(autoincrement())
+  sessionId    BigInt
+  role         messageRole
+  content      String
+  createdAt    DateTime     @default(now()) @db.Timestamptz(6)
+  chatSessions chatSessions @relation(fields: [sessionId], references: [sessionId], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([sessionId, createdAt], map: "idxChatMessagesSessionCreated")
+}
+
+model chatSessions {
+  sessionId    BigInt         @id @default(autoincrement())
+  userId       BigInt
+  title        String
+  createdAt    DateTime       @default(now()) @db.Timestamptz(6)
+  chatMessages chatMessages[]
+  accounts     accounts       @relation(fields: [userId], references: [userId], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([userId, createdAt(sort: Desc)], map: "idxChatSessionsUserCreated")
+}
+
+model deviceControl {
+  id         BigInt   @id @default(autoincrement())
+  cageId     String
+  dateTime   DateTime @db.Timestamptz(6)
+  deviceName String
+  state      String
+  controlBy  String
+  cages      cages    @relation(fields: [cageId], references: [cageId], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([cageId, dateTime(sort: Desc)], map: "idxDeviceControlCageTime")
+}
+
+model sensorData {
+  id          BigInt   @id @default(autoincrement())
+  cageId      String
+  dateTime    DateTime @db.Timestamptz(6)
+  temperature Float?
+  humidity    Float?
+  nh3         Float?
+  windSpeed   Float?
+  cages       cages    @relation(fields: [cageId], references: [cageId], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([cageId, dateTime(sort: Desc)], map: "idxSensorDataCageTime")
+}
+
+model userCages {
+  userId   BigInt
+  cageId   String
+  addedAt  DateTime @default(now()) @db.Timestamptz(6)
+  cages    cages    @relation(fields: [cageId], references: [cageId], onDelete: Cascade, onUpdate: NoAction)
+  accounts accounts @relation(fields: [userId], references: [userId], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([userId, cageId])
+}
+
+enum messageRole {
+  user
+  model
+}
