@@ -24,7 +24,7 @@ const HomePage = () => {
             <div className='w-full bg-[#193701] text-white  pt-20 min-h-screen flex items-center'>
                 <div className='mx-auto flex flex-col md:flex-row items-center justify-between px-6 py-16 gap-10'>
                     <div className='flex-1'>
-                        <h1 className='text-3xl text-[#ffc130] font-extrabold md:text-6xl leading-tight mb-6'>
+                        <h1 className='text-2xl text-[#ffc130] font-extrabold md:text-6xl leading-tight mb-6'>
                             NÂNG TẦM CHĂN NUÔI <br/> MỞ LỐI THÀNH CÔNG
                         </h1>
 
@@ -32,14 +32,14 @@ const HomePage = () => {
                          Trở thành giải pháp công nghệ nông nghiệp thông minh, đáng tin cậy và dễ tiếp cận, đồng hành cùng nông dân nâng tầm giá trị nông sản Việt.
                         </p>
 
-                        <div className='flex space-x-4'>
+                        <div className='flex gap-3 flex-wrap'>
                             <button
                                 onClick={() => {
                                     const element = document.getElementById('about');
                                     element.scrollIntoView({ behavior: 'smooth' });
                                 }}
-                                className='px-6 py-3 border border-white text-white text-lg md:text-xl font-semibold rounded-lg hover:bg-white hover:text-black transition'>
-                                Về QUALICARE AI
+                                className='px-2 py-1 md:px-6 md:py-3 border border-white text-white text-xm md:text-xl font-semibold rounded-lg hover:bg-white hover:text-black transition'>
+                                Về QUALICARE AI 
                             </button>
 
                             <button
@@ -47,7 +47,7 @@ const HomePage = () => {
                                     const element = document.getElementById('detail');
                                     element.scrollIntoView({ behavior: 'smooth' });
                                 }}
-                                className="px-6 py-3 border border-white text-white text-lg md:text-xl font-semibold rounded-lg hover:bg-white hover:text-black transition">
+                                className="px-2 py-1 md:px-6 md:py-3 border border-white text-white text-xm md:text-xl font-semibold rounded-lg hover:bg-white hover:text-black transition">
                                 Tìm Hiểu Thêm →
                             </button>
                         </div>
