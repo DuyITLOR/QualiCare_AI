@@ -1,10 +1,16 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Header from '../Components/Header'
 import Standard from '../assets/Standard.png'
 import Premium from '../assets/Premium.png'
 import PremiumPLus from '../assets/PremiumPlus.png'
+import DetailCard from '../Components/DetailCard'
 
 const Services = () => {
+    const [showDetail, setShowDetail] = React.useState(false);
+    const [selectedCategory, setSelectedCategory] = useState(null);
+
+
+
     return (
         <div>
             <Header />
@@ -21,55 +27,95 @@ const Services = () => {
                     </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    {/* --- Gói Standard --- */}
-                    <div className="rounded-2xl border-2 border-orange-200 bg-white p-6 shadow-lg hover:shadow-2xl transition transform hover:-translate-y-2">
-                        <h3 className="text-3xl font-bold text-[#ffc130] text-center mb-2">
-                            Standard
-                        </h3>
-                        <p className="text-center text-sm text-gray-500 mb-6">(5 thiết bị)</p>
+                {
+                    !showDetail && (
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                            {/* --- Gói Standard --- */}
+                            <div className="rounded-2xl border-2 border-orange-200 bg-white p-6 shadow-lg hover:shadow-2xl transition transform hover:-translate-y-2">
+                                <h3 className="text-3xl font-bold text-[#ffc130] text-center mb-2">
+                                    Standard
+                                </h3>
+                                <p className="text-center text-sm text-gray-500 mb-6">(5 thiết bị)</p>
 
-                        <div className="flex flex-wrap justify-center gap-4 mb-6">
-                            <img src={Standard} className='h-50 w-50' />
+                                <div className="flex flex-wrap justify-center gap-4 mb-6">
+                                    <img src={Standard} className='h-50 w-50' />
+                                </div>
+
+                                <button
+                                    onClick={() => {
+                                        setShowDetail(true);
+                                        setSelectedCategory({
+                                            label: 'Standard',
+                                            priceMonth: '150.000',
+                                            priceNow: '2.000.000',
+                                            img: Standard
+                                        })
+                                    }}
+                                    className="w-full bg-[#7d4229] hover:bg-[#5c301f] text-white py-3 px-4 rounded-lg font-semibold transition">
+                                    Chọn gói Standard
+                                </button>
+                            </div>
+
+                            {/* --- Gói Premium --- */}
+                            <div className="rounded-2xl border-2 border-orange-200 bg-white p-6 shadow-lg hover:shadow-2xl transition transform hover:-translate-y-2">
+                                <h3 className="text-3xl font-bold text-[#ffc130] text-center mb-2">
+                                    Premium
+                                </h3>
+                                <p className="text-center text-sm text-gray-500 mb-6">(6 thiết bị)</p>
+
+                                <div className="flex flex-wrap justify-center gap-4 mb-6">
+                                    <img src={Premium} className='h-50 w-50' />
+                                </div>
+
+                                <button
+                                    onClick={() => {
+                                        setShowDetail(true);
+                                        setSelectedCategory({
+                                            label: 'Premium',
+                                            priceMonth: '150.000',
+                                            priceNow: '2.000.000',
+                                            img: Premium
+                                        })
+                                    }}
+                                    className="w-full bg-[#7d4229] hover:bg-[#5c301f] text-white py-3 px-4 rounded-lg font-semibold transition">
+                                    Chọn gói Premium
+                                </button>
+                            </div>
+
+                            {/* --- Gói Premium Plus --- */}
+                            <div className="rounded-2xl border-2 border-orange-200 bg-white p-6 shadow-lg hover:shadow-2xl transition transform hover:-translate-y-2">
+                                <h3 className="text-2xl font-bold text-[#ffc130] text-center mb-2">
+                                    Premium Plus
+                                </h3>
+                                <p className="text-center text-sm text-gray-500 mb-6">(6 thiết bị + AI)</p>
+
+                                <div className="flex flex-wrap justify-center gap-4 mb-6">
+                                    <img src={PremiumPLus} alt="" className='h-50 w-60' />
+                                </div>
+
+                                <button
+                                    onClick={() => {
+                                        setShowDetail(true);
+                                        setSelectedCategory({
+                                            label: 'Premium Plus',
+                                            priceMonth: '150.000',
+                                            priceNow: '2.000.000',
+                                            img: PremiumPLus
+                                        })
+                                    }}
+                                    className="w-full bg-[#7d4229] hover:bg-[#5c301f] text-white py-3 px-4 rounded-lg font-semibold transition">
+                                    Chọn gói Premium Plus
+                                </button>
+                            </div>
                         </div>
+                    )
+                }
 
-                        <button className="w-full bg-[#7d4229] hover:bg-[#5c301f] text-white py-3 px-4 rounded-lg font-semibold transition">
-                            Chọn gói Standard
-                        </button>
-                    </div>
-
-                    {/* --- Gói Premium --- */}
-                    <div className="rounded-2xl border-2 border-orange-200 bg-white p-6 shadow-lg hover:shadow-2xl transition transform hover:-translate-y-2">
-                        <h3 className="text-3xl font-bold text-[#ffc130] text-center mb-2">
-                            Premium
-                        </h3>
-                        <p className="text-center text-sm text-gray-500 mb-6">(6 thiết bị)</p>
-
-                        <div className="flex flex-wrap justify-center gap-4 mb-6">
-                            <img src={Premium} className='h-50 w-50' />
-                        </div>
-
-                        <button className="w-full bg-[#7d4229] hover:bg-[#5c301f] text-white py-3 px-4 rounded-lg font-semibold transition">
-                            Chọn gói Premium
-                        </button>
-                    </div>
-
-                    {/* --- Gói Premium Plus --- */}
-                    <div className="rounded-2xl border-2 border-orange-200 bg-white p-6 shadow-lg hover:shadow-2xl transition transform hover:-translate-y-2">
-                        <h3 className="text-2xl font-bold text-[#ffc130] text-center mb-2">
-                            Premium Plus
-                        </h3>
-                        <p className="text-center text-sm text-gray-500 mb-6">(6 thiết bị + AI)</p>
-
-                        <div className="flex flex-wrap justify-center gap-4 mb-6">
-                            <img src={PremiumPLus} alt="" className='h-50 w-60' />
-                        </div>
-
-                        <button className="w-full bg-[#7d4229] hover:bg-[#5c301f] text-white py-3 px-4 rounded-lg font-semibold transition">
-                            Chọn gói Premium Plus
-                        </button>
-                    </div>
-                </div>
+                {
+                    showDetail && (
+                        <DetailCard {...selectedCategory} setIsOpen={setShowDetail} />
+                    )
+                }
 
                 <div className="max-w-3xl mx-auto text-center text-white pt-25">
                     <h3 className="text-2xl font-bold mb-4">Cần tư vấn thêm?</h3>
