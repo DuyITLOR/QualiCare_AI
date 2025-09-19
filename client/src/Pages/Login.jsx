@@ -11,11 +11,17 @@ const Login = () => {
     const navigate = useNavigate();
     const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
-    const [showPassword, setShowPassword] = useState(true);
+    const [showPassword, setShowPassword] = useState(false);
 
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log("Login form submitted", {userName, password});
+        if (userName === "Duy" && password === "duy123") {
+            navigate('/dashboard');
+        } else {
+            alert("Sai tên đăng nhập hoặc mật khẩu!");
+        }
+        
     }
 
     return (
@@ -40,6 +46,8 @@ const Login = () => {
                     <p className='text-center text-gray-500 text-sm mb-6'>
                         Chào mừng bạn quay trở lại với QuailCare AI
                     </p>
+
+
 
                     <form onSubmit={handleSubmit} className='space-y-6'>
                         <div>
@@ -106,6 +114,7 @@ const Login = () => {
                         </div>
 
                         <div className="text-center text-sm text-gray-600">
+                         <p>TK: Duy - MK: duy123</p>
                             Chưa có tài khoản?{" "}
                             <button
                                 type="button"
