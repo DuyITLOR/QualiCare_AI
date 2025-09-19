@@ -2,14 +2,15 @@ import React, { useState } from "react"
 import { 
   FaChevronDown, FaUser, FaPhone, FaSearch, 
   FaRegCommentDots, FaUsers, FaEye, FaClock, 
-  FaThumbtack, FaStar, FaUserCircle
+  FaThumbtack, FaStar, FaUserCircle, FaArrowLeft,
+  FaBars, FaTimes
 } from "react-icons/fa"
 import Header from '../Components/Header'
-
 
 const Forum = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedPost, setSelectedPost] = useState(null);
+  const [showMobileSearch, setShowMobileSearch] = useState(false);
 
   const forumCategories = [
     {
@@ -57,7 +58,6 @@ const Forum = () => {
     },
   ]
 
-  // Hardcoded posts for a selected category
   const categoryPosts = [
     {
       id: 101,
@@ -79,7 +79,6 @@ const Forum = () => {
     },
   ];
 
-  // Hardcoded post detail with comments
   const postDetail = {
     id: 101,
     title: "Thảo luận về cách úm cút con hiệu quả",
@@ -99,7 +98,6 @@ const Forum = () => {
   };
 
   const handlePostClick = (post) => {
-    // In a real app, you would fetch post details based on post.id
     setSelectedPost(postDetail); 
   };
 
@@ -114,13 +112,58 @@ const Forum = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 pt-16">
-      <header>
-        <Header/>
-      </header>
+      <Header />
 
-      {/* Search + Create Post */}
-      <div className="bg-white border-b">
-        <div className="max-w-7xl mx-auto flex justify-between items-center py-6 px-6">
+      {/* Mobile Header */}
+      <div className="bg-white border-b sticky top-16 z-10">
+        <div className="flex justify-between items-center py-3 px-4">
+          {/* Back button and title */}
+          <div className="flex items-center gap-3">
+            {(selectedCategory || selectedPost) && (
+              <button 
+                onClick={selectedPost ? handleBackToCategory : handleBackToForum}
+                className="p-2 hover:bg-gray-100 rounded-full"
+              >
+                <FaArrowLeft className="text-[#193701]" />
+              </button>
+            )}
+            <div>
+              <h2 className="text-lg font-bold text-[#ffc130] md:text-2xl">
+                {selectedPost ? 'Bài viết' : selectedCategory ? selectedCategory.title : 'Diễn đàn'}
+              </h2>
+              {selectedCategory && !selectedPost && (
+                <p className="text-xs text-gray-500 md:hidden">{selectedCategory.posts} bài viết</p>
+              )}
+            </div>
+          </div>
+
+          {/* Action buttons */}
+          <div className="flex items-center gap-2">
+            <button 
+              onClick={() => setShowMobileSearch(!showMobileSearch)}
+              className="p-2 hover:bg-gray-100 rounded-full"
+            >
+              <FaSearch className="text-gray-600" />
+            </button>
+            <button className="bg-[#193701] text-white px-3 py-2 rounded-lg text-sm">
+              Tạo
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile Search */}
+        {showMobileSearch && (
+          <div className="px-4 pb-3">
+            <input
+              type="text"
+              placeholder="Tìm kiếm bài viết..."
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+            />
+          </div>
+        )}
+
+        {/* Desktop Search Bar */}
+        <div className="hidden md:flex justify-between items-center py-6 px-6">
           <h2 className="text-2xl font-bold text-[#ffc130]">Diễn đàn QuailCare AI</h2>
           <div className="flex items-center gap-4">
             <div className="relative">
@@ -136,77 +179,77 @@ const Forum = () => {
         </div>
       </div>
 
-      {/* Breadcrumbs & Content */}
-      <div className="max-w-7xl mx-auto py-8 px-6">
-        {/* Breadcrumbs */}
-        <div className="text-sm text-gray-500 mb-4">
-          <span onClick={handleBackToForum} className="hover:underline cursor-pointer text-[#193701]">Diễn đàn</span>
-          {selectedCategory && 
-            <>
-              <span className="mx-2">&gt;</span>
-              <span onClick={handleBackToCategory} className={`${selectedPost ? 'hover:underline cursor-pointer text-[#193701]' : ''}`}>{selectedCategory.title}</span>
-            </>
-          }
-          {selectedPost && 
-            <>
-              <span className="mx-2">&gt;</span>
-              <span>{selectedPost.title}</span>
-            </>
-          }
-        </div>
-
+      {/* Content */}
+      <div className="p-4 md:max-w-7xl md:mx-auto md:py-8 md:px-6">
         {selectedPost ? (
           // Post Detail View
-          <div>
-            <h2 className="text-3xl font-bold text-[#ffc130] mb-2">{selectedPost.title}</h2>
-            <p className="text-sm text-gray-500 mb-6">
-              bởi {selectedPost.author} • {selectedPost.time}
-            </p>
-            <div className="bg-white p-6 rounded-lg shadow-sm mb-8">
+          <div className="space-y-4">
+            <div className="bg-white p-4 rounded-lg shadow-sm">
+              <h1 className="text-xl font-bold text-[#ffc130] mb-2 md:text-3xl">{selectedPost.title}</h1>
+              <div className="flex items-center gap-2 text-sm text-gray-500 mb-4">
+                <FaUserCircle className="w-4 h-4" />
+                <span>{selectedPost.author}</span>
+                <span>•</span>
+                <span>{selectedPost.time}</span>
+              </div>
               <p className="text-gray-800 leading-relaxed">{selectedPost.content}</p>
             </div>
 
-            <h3 className="text-xl font-bold text-[#ffc130] mb-4">Thảo luận ({selectedPost.comments.length})</h3>
-            <div className="space-y-4">
-              {selectedPost.comments.map(comment => (
-                <div key={comment.id} className="flex items-start gap-4 bg-white p-4 rounded-lg shadow-sm">
-                  <FaUserCircle className="w-8 h-8 text-gray-400 mt-1" />
-                  <div className="flex-1">
-                    <p className="font-semibold text-[#193701]">{comment.author}</p>
-                    <p className="text-sm text-gray-500 mb-2">{comment.time}</p>
-                    <p className="text-gray-700">{comment.text}</p>
+            <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+              <div className="bg-gray-50 px-4 py-3 border-b">
+                <h3 className="font-bold text-[#ffc130] flex items-center gap-2">
+                  <FaRegCommentDots />
+                  Thảo luận ({selectedPost.comments.length})
+                </h3>
+              </div>
+              <div className="divide-y">
+                {selectedPost.comments.map(comment => (
+                  <div key={comment.id} className="p-4">
+                    <div className="flex items-start gap-3">
+                      <FaUserCircle className="w-8 h-8 text-gray-400 mt-1 flex-shrink-0" />
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          <p className="font-semibold text-[#193701] text-sm">{comment.author}</p>
+                          <p className="text-xs text-gray-500">{comment.time}</p>
+                        </div>
+                        <p className="text-gray-700 text-sm leading-relaxed">{comment.text}</p>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
         ) : selectedCategory ? (
-          // Category Detail View
-          <div>
-            <button onClick={handleBackToCategory} className="text-[#193701] font-semibold mb-4 hover:underline">
-              &larr; Quay lại danh mục
-            </button>
-            <h3 className="flex items-center gap-2 text-2xl font-bold text-[#ffc130] mb-2">
-              {selectedCategory.title}
-            </h3>
-            <p className="text-gray-600 mb-6">{selectedCategory.description}</p>
+          // Category Posts View
+          <div className="space-y-3">
+            {/* Category description - hidden on mobile */}
+            <div className="hidden md:block bg-white p-4 rounded-lg shadow-sm">
+              <p className="text-gray-600">{selectedCategory.description}</p>
+            </div>
             
-            {/* Posts in the category */}
             {categoryPosts.map(post => (
-              <div key={post.id} onClick={() => handlePostClick(post)} className="bg-white p-4 mb-2 rounded-lg shadow-sm hover:bg-gray-50 cursor-pointer">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h4 className="font-medium text-[#ffc130] flex items-center gap-2">
-                      {post.isPinned && <FaThumbtack className="text-orange-500" />}
-                      {post.title}
+              <div key={post.id} onClick={() => handlePostClick(post)} 
+                   className="bg-white p-4 rounded-lg shadow-sm active:bg-gray-50">
+                <div className="flex items-start gap-3">
+                  <div className="flex-1 min-w-0">
+                    <h4 className="font-medium text-[#ffc130] flex items-center gap-2 mb-1">
+                      {post.isPinned && <FaThumbtack className="text-orange-500 w-3 h-3" />}
+                      <span className="line-clamp-2">{post.title}</span>
                     </h4>
-                    <p className="text-sm text-gray-500">
-                      bởi {post.author} • {post.time}
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-4 text-gray-500 text-sm">
-                    <span className="flex items-center gap-1"><FaRegCommentDots /> {post.replies}</span>
-                    <span className="flex items-center gap-1"><FaEye /> {post.views}</span>
+                    <div className="flex items-center gap-2 text-xs text-gray-500 mb-2">
+                      <span>{post.author}</span>
+                      <span>•</span>
+                      <span>{post.time}</span>
+                    </div>
+                    <div className="flex items-center gap-4 text-xs text-gray-500">
+                      <span className="flex items-center gap-1">
+                        <FaRegCommentDots className="w-3 h-3" /> {post.replies}
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <FaEye className="w-3 h-3" /> {post.views}
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -214,55 +257,76 @@ const Forum = () => {
           </div>
         ) : (
           // Main Forum View
-          <>
-            <h3 className="flex items-center gap-2 text-xl font-bold text-[#ffc130] mb-4">
-              <FaRegCommentDots /> Danh mục diễn đàn
-            </h3>
-            {forumCategories.map(cat => (
-              <div key={cat.id} onClick={() => handleCategoryClick(cat)} className="bg-white p-4 mb-4 rounded-lg shadow-sm flex justify-between cursor-pointer hover:shadow-md transition-shadow">
-                <div>
-                  <h4 className="text-lg font-semibold text-[#ffc130]">{cat.title}</h4>
-                  <p className="text-gray-600">{cat.description}</p>
-                  <p className="text-sm text-gray-500">{cat.topics} chủ đề • {cat.posts} bài viết</p>
-                </div>
-                <div className="text-right text-sm">
-                  <p>{cat.lastPost}</p>
-                  <p className="font-medium text-[#ffc130]">{cat.lastUser}</p>
-                </div>
+          <div className="space-y-6">
+            {/* Categories */}
+            <div>
+              <h3 className="flex items-center gap-2 text-lg font-bold text-[#ffc130] mb-3 md:text-xl">
+                <FaRegCommentDots /> Danh mục diễn đàn
+              </h3>
+              <div className="space-y-3">
+                {forumCategories.map(cat => (
+                  <div key={cat.id} onClick={() => handleCategoryClick(cat)} 
+                       className="bg-white p-4 rounded-lg shadow-sm active:bg-gray-50">
+                    <div className="flex justify-between items-start">
+                      <div className="flex-1 min-w-0">
+                        <h4 className="text-lg font-semibold text-[#ffc130] mb-1">{cat.title}</h4>
+                        <p className="text-gray-600 text-sm mb-2 line-clamp-2">{cat.description}</p>
+                        <p className="text-xs text-gray-500">{cat.topics} chủ đề • {cat.posts} bài viết</p>
+                      </div>
+                      <div className="text-right text-xs text-gray-500 ml-3 flex-shrink-0">
+                        <p>{cat.lastPost}</p>
+                        <p className="font-medium text-[#ffc130]">{cat.lastUser}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
 
             {/* Recent Posts */}
-            <h3 className="flex items-center gap-2 text-xl font-bold text-[#ffc130] mt-8 mb-4">
-              <FaClock /> Bài viết gần đây
-            </h3>
-            {recentPosts.map(post => (
-              <div key={post.id} onClick={() => handlePostClick(post)} className="bg-white p-4 mb-2 rounded-lg shadow-sm hover:bg-gray-50 cursor-pointer">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h4 className="font-medium text-[#ffc130] flex items-center gap-2">
-                      {post.isPinned && <FaThumbtack className="text-orange-500" />}
-                      {post.title}
-                    </h4>
-                    <p className="text-sm text-gray-500">
-                      bởi {post.author} • {post.time} • <span className="italic">{post.category}</span>
-                    </p>
+            <div>
+              <h3 className="flex items-center gap-2 text-lg font-bold text-[#ffc130] mb-3 md:text-xl">
+                <FaClock /> Bài viết gần đây
+              </h3>
+              <div className="space-y-3">
+                {recentPosts.map(post => (
+                  <div key={post.id} onClick={() => handlePostClick(post)} 
+                       className="bg-white p-4 rounded-lg shadow-sm active:bg-gray-50">
+                    <div className="flex items-start gap-3">
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-medium text-[#ffc130] flex items-center gap-2 mb-1">
+                          {post.isPinned && <FaThumbtack className="text-orange-500 w-3 h-3" />}
+                          <span className="line-clamp-2">{post.title}</span>
+                        </h4>
+                        <div className="flex items-center gap-2 text-xs text-gray-500 mb-2">
+                          <span>{post.author}</span>
+                          <span>•</span>
+                          <span>{post.time}</span>
+                          <span>•</span>
+                          <span className="italic">{post.category}</span>
+                        </div>
+                        <div className="flex items-center gap-4 text-xs text-gray-500">
+                          <span className="flex items-center gap-1">
+                            <FaRegCommentDots className="w-3 h-3" /> {post.replies}
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <FaEye className="w-3 h-3" /> {post.views}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-4 text-gray-500 text-sm">
-                    <span className="flex items-center gap-1"><FaRegCommentDots /> {post.replies}</span>
-                    <span className="flex items-center gap-1"><FaEye /> {post.views}</span>
-                  </div>
-                </div>
+                ))}
               </div>
-            ))}
-          </>
+            </div>
+          </div>
         )}
       </div>
 
-      {/* Floating Button */}
-      <div className="fixed bottom-8 right-8">
-        <button className="bg-[#193701] w-14 h-14 rounded-full shadow-lg flex items-center justify-center">
-          <FaPhone className="text-white w-6 h-6" />
+      {/* Floating Action Button */}
+      <div className="fixed bottom-6 right-6 md:bottom-8 md:right-8">
+        <button className="bg-[#193701] w-12 h-12 md:w-14 md:h-14 rounded-full shadow-lg flex items-center justify-center">
+          <FaPhone className="text-white w-5 h-5 md:w-6 md:h-6" />
         </button>
       </div>
     </div>
