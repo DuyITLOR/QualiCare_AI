@@ -1,6 +1,7 @@
 {
+    "version": 2,
     "rewrites": [
-      { "source": "/api/:path*", "destination": "https://quali-care-api.vercel.app/api/:path*" }
+      { "source": "/api/(.*)", "destination": "https://quali-care-ai.vercel.app/api/$1" }
     ]
   }
   
