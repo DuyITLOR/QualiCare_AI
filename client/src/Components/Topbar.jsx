@@ -17,8 +17,8 @@ const TopBar = ({ title = "Chuồng Chim Cút", onRefresh }) => {
   const dateText = now.toLocaleDateString("vi-VN");
 
   return (
-    <header className="fixed inset-x-0 top-0 z-40 h-14 bg-green-800 text-white">
-      <div className="mx-auto flex h-full max-w-screen-2xl items-center justify-between px-4">
+    <header className="fixed inset-x-0 top-0 z-40 h-14 bg-green-900 text-white">
+      <div className="mx-auto flex h-full max-w-screen items-center justify-between px-4">
         <div className="flex items-center gap-3">
           <button
             className="inline-flex items-center justify-center rounded-lg p-1.5 hover:bg-white/10"
