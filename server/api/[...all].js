@@ -1,5 +1,5 @@
-// server/api/index.js
-const serverless = require('serverless-http');
+// server/api/[...all].js
 const app = require('../app');
 
-module.exports = serverless(app);
+// Export thẳng Express app (không serverless-http)
+module.exports = (req, res) => app(req, res);
