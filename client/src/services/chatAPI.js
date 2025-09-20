@@ -1,4 +1,5 @@
-const API_BASE_URL = 'http://localhost:5050/api/chat';
+// const API_BASE_URL = 'http://localhost:5050/api/chat';
+const API_BASE_URL = (import.meta.env?.VITE_API_BASE || '/api') + '/chat';
 
 // Helper function để xử lý response
 const handleResponse = async (response) => {
@@ -132,7 +133,8 @@ export const chatAPI = {
   // Test connection để kiểm tra server
   testConnection: async () => {
     try {
-      const response = await fetch('http://localhost:5050/health');
+      // const response = await fetch('http://localhost:5050/health');
+      const response = await fetch((import.meta.env?.VITE_API_BASE || '/api') + '/health');
       
       if (!response.ok) {
         throw new Error(`Server responded with status: ${response.status}`);
