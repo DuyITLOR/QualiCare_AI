@@ -105,6 +105,54 @@ class ChatService {
     }
   }
 
+  // Thêm method xóa session
+  async deleteSession(sessionId) {
+    try {
+      // Xóa tất cả messages trước
+      await prisma.chatMessages.deleteMany({
+        where: { sessionId: BigInt(sessionId) }
+      });
+      
+      // Xóa session
+      await prisma.chatSessions.delete({
+        where: { sessionId: BigInt(sessionId) }
+      });
+      
+      return { success: true };
+    } catch (error) {
+      console.error('Error deleting session:', error);
+      throw new Error('Không thể xóa cuộc trò chuyện');
+    }
+  }
+
+  // Thêm method xóa tất cả sessions của user
+  async deleteAllSessions(userId) {
+    try {
+      // Lấy tất cả session IDs của user
+      const sessions = await prisma.chatSessions.findMany({
+        where: { userId: BigInt(userId) },
+        select: { sessionId: true }
+      });
+
+      const sessionIds = sessions.map(s => s.sessionId);
+
+      // Xóa tất cả messages của user
+      await prisma.chatMessages.deleteMany({
+        where: { sessionId: { in: sessionIds } }
+      });
+
+      // Xóa tất cả sessions của user
+      await prisma.chatSessions.deleteMany({
+        where: { userId: BigInt(userId) }
+      });
+
+      return { success: true };
+    } catch (error) {
+      console.error('Error deleting all sessions:', error);
+      throw new Error('Không thể xóa tất cả cuộc trò chuyện');
+    }
+  }
+
   async updateSessionTitle(sessionId, title) {
     try {
       const session = await prisma.chatSessions.update({

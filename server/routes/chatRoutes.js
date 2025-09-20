@@ -67,4 +67,26 @@ router.put('/sessions/:sessionId', async (req, res) => {
   }
 });
 
+// Xóa một session
+router.delete('/sessions/:sessionId', async (req, res) => {
+  try {
+    const { sessionId } = req.params;
+    const result = await chatService.deleteSession(sessionId);
+    res.json({ success: true, data: result });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// Xóa tất cả sessions của user
+router.delete('/sessions/user/:userId', async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const result = await chatService.deleteAllSessions(userId);
+    res.json({ success: true, data: result });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 module.exports = router;

@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
   FaPlus, FaPaperPlane, FaRobot, FaUserCircle, 
-  FaChevronRight, FaArrowLeft, FaBars, FaTimes
+  FaChevronRight, FaArrowLeft, FaBars, FaTimes,
+  FaTrash, FaEllipsisV, FaCheck, FaEdit
 } from 'react-icons/fa';
 import Header from '../Components/Header';
 import { chatAPI } from '../services/chatAPI';
@@ -13,7 +14,11 @@ const Chatbox = () => {
   const [currentSession, setCurrentSession] = useState(null);
   const [loading, setLoading] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
-  const [showChatList, setShowChatList] = useState(true); // Mobile: hiển thị danh sách chat
+  const [showChatList, setShowChatList] = useState(true);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(null);
+  const [showClearAllConfirm, setShowClearAllConfirm] = useState(false);
+  const [editingSession, setEditingSession] = useState(null);
+  const [editTitle, setEditTitle] = useState('');
   const chatEndRef = useRef(null);
 
   const userId = 1;
@@ -34,8 +39,6 @@ const Chatbox = () => {
       const sessionsData = await chatAPI.getSessions(userId);
       setSessions(sessionsData);
       
-      // Desktop: tự động load session đầu tiên
-      // Mobile: chỉ hiển thị danh sách
       if (sessionsData.length > 0 && window.innerWidth >= 768) {
         loadSession(sessionsData[0]);
       } else if (sessionsData.length === 0) {
@@ -65,7 +68,6 @@ const Chatbox = () => {
         }
       ]);
       
-      // Mobile: chuyển sang view chat
       if (window.innerWidth < 768) {
         setShowChatList(false);
       }
@@ -95,7 +97,6 @@ const Chatbox = () => {
         setMessages(messagesData);
       }
       
-      // Mobile: chuyển sang view chat
       if (window.innerWidth < 768) {
         setShowChatList(false);
       }
@@ -145,6 +146,43 @@ const Chatbox = () => {
     }
   };
 
+  const handleDeleteSession = async (sessionId) => {
+    try {
+      await chatAPI.deleteSession(sessionId);
+      
+      setSessions(prev => prev.filter(s => s.sessionId !== sessionId));
+      
+      if (currentSession?.sessionId === sessionId) {
+        const remainingSessions = sessions.filter(s => s.sessionId !== sessionId);
+        if (remainingSessions.length > 0) {
+          loadSession(remainingSessions[0]);
+        } else {
+          createNewSession();
+        }
+      }
+      
+      setShowDeleteConfirm(null);
+    } catch (error) {
+      console.error('Error deleting session:', error);
+      alert('Không thể xóa cuộc trò chuyện. Vui lòng thử lại.');
+    }
+  };
+
+  const handleClearAllSessions = async () => {
+    try {
+      await chatAPI.deleteAllSessions(userId);
+      setSessions([]);
+      setCurrentSession(null);
+      setMessages([]);
+      setShowClearAllConfirm(false);
+      
+      createNewSession();
+    } catch (error) {
+      console.error('Error clearing all sessions:', error);
+      alert('Không thể xóa tất cả cuộc trò chuyện. Vui lòng thử lại.');
+    }
+  };
+
   const formatTime = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('vi-VN') + ' - ' + date.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
@@ -154,7 +192,7 @@ const Chatbox = () => {
     return session.title.length > 30 ? session.title.substring(0, 30) + '...' : session.title;
   };
 
-  // Mobile Chat List View
+  // Mobile Chat List View với nút xóa bên phải
   const ChatListView = () => (
     <div className="flex flex-col h-full">
       {/* Header */}
@@ -165,13 +203,25 @@ const Chatbox = () => {
             <FaRobot className="w-6 h-6 text-[#193701]" />
           </div>
         </div>
-        <button 
-          onClick={createNewSession}
-          disabled={loading}
-          className="w-full flex items-center justify-center gap-2 p-3 bg-[#193701] text-white rounded-lg disabled:opacity-50"
-        >
-          <FaPlus /> Cuộc trò chuyện mới
-        </button>
+        
+        <div className="space-y-2">
+          <button 
+            onClick={createNewSession}
+            disabled={loading}
+            className="w-full flex items-center justify-center gap-2 p-3 bg-[#193701] text-white rounded-lg disabled:opacity-50"
+          >
+            <FaPlus /> Cuộc trò chuyện mới
+          </button>
+          
+          {sessions.length > 0 && (
+            <button 
+              onClick={() => setShowClearAllConfirm(true)}
+              className="w-full flex items-center justify-center gap-2 p-2 border border-red-300 text-red-600 rounded-lg hover:bg-red-50"
+            >
+              <FaTrash /> Xóa tất cả
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Chat Sessions List */}
@@ -189,18 +239,28 @@ const Chatbox = () => {
             {sessions.map(session => (
               <div 
                 key={session.sessionId}
-                onClick={() => loadSession(session)}
-                className="bg-white p-4 rounded-lg shadow-sm active:bg-gray-50"
+                className="bg-white rounded-lg shadow-sm overflow-hidden"
               >
-                <div className="flex items-start gap-3">
-                  <FaRobot className="w-8 h-8 text-[#193701] mt-1 flex-shrink-0" />
-                  <div className="flex-1 min-w-0">
+                <div className="flex items-center p-4">
+                  <FaRobot className="w-8 h-8 text-[#193701] flex-shrink-0" />
+                  <div 
+                    className="flex-1 min-w-0 cursor-pointer ml-3"
+                    onClick={() => loadSession(session)}
+                  >
                     <p className="font-medium text-gray-800 truncate mb-1">
                       {getSessionPreview(session)}
                     </p>
                     <p className="text-sm text-gray-500">{formatTime(session.createdAt)}</p>
                   </div>
-                  <FaChevronRight className="w-4 h-4 text-gray-400 mt-2" />
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setShowDeleteConfirm(session.sessionId);
+                    }}
+                    className="p-2 text-red-500 hover:bg-red-50 rounded-full flex-shrink-0 ml-2"
+                  >
+                    <FaTrash className="w-4 h-4" />
+                  </button>
                 </div>
               </div>
             ))}
@@ -210,11 +270,11 @@ const Chatbox = () => {
     </div>
   );
 
-  // Mobile Chat View
+  // Mobile Chat View với FIXED header position
   const ChatView = () => (
-    <div className="flex flex-col h-full">
-      {/* Chat Header */}
-      <div className="bg-white border-b p-4 flex items-center gap-3">
+    <div className="flex flex-col h-full relative">
+      {/* FIXED Sticky Chat Header - luôn nằm trên đầu */}
+      <div className="bg-white border-b p-4 flex items-center gap-3 fixed top-14 left-0 right-0 z-20 md:hidden">
         <button 
           onClick={() => setShowChatList(true)}
           className="p-2 hover:bg-gray-100 rounded-full"
@@ -228,8 +288,8 @@ const Chatbox = () => {
         </div>
       </div>
 
-      {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 bg-gray-50">
+      {/* Messages với padding-top để tránh header */}
+      <div className="flex-1 overflow-y-auto p-4 bg-gray-50 pt-20">
         {messages.map(msg => (
           <div key={msg.id || msg.messageId} className={`flex items-end gap-3 mb-4 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
             {msg.role === 'model' && <FaRobot className="w-6 h-6 text-[#193701] mb-1 flex-shrink-0" />}
@@ -244,7 +304,6 @@ const Chatbox = () => {
           </div>
         ))}
         
-        {/* Typing indicator */}
         {isTyping && (
           <div className="flex items-end gap-3 mb-4 justify-start">
             <FaRobot className="w-6 h-6 text-[#193701] mb-1" />
@@ -259,10 +318,12 @@ const Chatbox = () => {
         )}
         
         <div ref={chatEndRef} />
+        {/* Padding bottom để tránh input */}
+        <div className="h-32"></div>
       </div>
 
-      {/* Input */}
-      <div className="bg-white border-t p-4">
+      {/* FIXED Input ở bottom */}
+      <div className="bg-white border-t p-4 fixed bottom-0 left-0 right-0 z-20 md:hidden">
         <form onSubmit={handleSend} className="relative">
           <input
             type="text"
@@ -281,7 +342,6 @@ const Chatbox = () => {
           </button>
         </form>
 
-        {/* Quick suggestions */}
         {messages.length <= 1 && (
           <div className="mt-3 flex flex-wrap gap-2">
             {[
@@ -312,17 +372,29 @@ const Chatbox = () => {
         {showChatList ? <ChatListView /> : <ChatView />}
       </div>
 
-      {/* Desktop View - giữ nguyên layout cũ */}
+      {/* Desktop View - với nút xóa bên phải */}
       <div className="hidden md:flex flex-grow overflow-hidden">
         {/* Left Sidebar - Chat History */}
         <aside className="w-1/4 bg-white border-r p-4 flex flex-col">
-          <button 
-            onClick={createNewSession}
-            disabled={loading}
-            className="flex items-center justify-center gap-2 w-full p-3 mb-4 text-lg font-semibold bg-[#193701] text-white rounded-lg hover:bg-green-900 transition-colors disabled:opacity-50"
-          >
-            <FaPlus /> Cuộc trò chuyện mới
-          </button>
+          <div className="space-y-2 mb-4">
+            <button 
+              onClick={createNewSession}
+              disabled={loading}
+              className="flex items-center justify-center gap-2 w-full p-3 text-lg font-semibold bg-[#193701] text-white rounded-lg hover:bg-green-900 transition-colors disabled:opacity-50"
+            >
+              <FaPlus /> Cuộc trò chuyện mới
+            </button>
+            
+            {sessions.length > 0 && (
+              <button 
+                onClick={() => setShowClearAllConfirm(true)}
+                className="flex items-center justify-center gap-2 w-full p-2 border border-red-300 text-red-600 rounded-lg hover:bg-red-50"
+              >
+                <FaTrash /> Xóa tất cả
+              </button>
+            )}
+          </div>
+          
           <h2 className="text-lg font-bold text-[#ffc130] mb-2">Lịch sử</h2>
           <div className="flex-grow overflow-y-auto">
             {loading ? (
@@ -331,15 +403,30 @@ const Chatbox = () => {
               sessions.map(session => (
                 <div 
                   key={session.sessionId}
-                  onClick={() => loadSession(session)}
-                  className={`p-3 mb-2 rounded-lg cursor-pointer transition-colors ${
+                  className={`p-3 mb-2 rounded-lg transition-colors group ${
                     currentSession?.sessionId === session.sessionId 
                       ? 'bg-yellow-100 border border-[#ffc130]' 
                       : 'hover:bg-gray-100'
                   }`}
                 >
-                  <p className="font-semibold text-gray-800 truncate">{session.title}</p>
-                  <p className="text-sm text-gray-600">{formatTime(session.createdAt)}</p>
+                  <div className="flex items-start justify-between">
+                    <div 
+                      onClick={() => loadSession(session)}
+                      className="flex-1 cursor-pointer"
+                    >
+                      <p className="font-semibold text-gray-800 truncate">{session.title}</p>
+                      <p className="text-sm text-gray-600">{formatTime(session.createdAt)}</p>
+                    </div>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setShowDeleteConfirm(session.sessionId);
+                      }}
+                      className="opacity-0 group-hover:opacity-100 p-1 text-red-500 hover:bg-red-100 rounded text-sm transition-opacity ml-2 flex-shrink-0"
+                    >
+                      <FaTrash className="w-3 h-3" />
+                    </button>
+                  </div>
                 </div>
               ))
             )}
@@ -436,6 +523,64 @@ const Chatbox = () => {
             </button>
         </aside>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg p-6 max-w-md w-full">
+            <div className="text-center">
+              <FaTrash className="w-12 h-12 text-red-500 mx-auto mb-4" />
+              <h3 className="text-lg font-bold text-gray-900 mb-2">Xóa cuộc trò chuyện?</h3>
+              <p className="text-gray-600 mb-6">
+                Bạn có chắc chắn muốn xóa cuộc trò chuyện này? Hành động này không thể hoàn tác.
+              </p>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setShowDeleteConfirm(null)}
+                  className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+                >
+                  Hủy
+                </button>
+                <button
+                  onClick={() => handleDeleteSession(showDeleteConfirm)}
+                  className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+                >
+                  Xóa
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Clear All Confirmation Modal */}
+      {showClearAllConfirm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg p-6 max-w-md w-full">
+            <div className="text-center">
+              <FaTrash className="w-12 h-12 text-red-500 mx-auto mb-4" />
+              <h3 className="text-lg font-bold text-gray-900 mb-2">Xóa tất cả cuộc trò chuyện?</h3>
+              <p className="text-gray-600 mb-6">
+                Bạn có chắc chắn muốn xóa TẤT CẢ cuộc trò chuyện? Hành động này không thể hoàn tác.
+              </p>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setShowClearAllConfirm(false)}
+                  className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+                >
+                  Hủy
+                </button>
+                <button
+                  onClick={handleClearAllSessions}
+                  className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+                >
+                  Xóa tất cả
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
