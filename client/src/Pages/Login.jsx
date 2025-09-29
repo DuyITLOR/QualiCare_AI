@@ -4,7 +4,7 @@ import { IoIosArrowRoundBack } from "react-icons/io";
 import logoIcon from '../assets/quailcare-logo.png';
 import { BsFillEyeSlashFill } from "react-icons/bs";
 import { BsFillEyeFill } from "react-icons/bs";
-
+import { authAPI } from '../services/authAPI';
 
 
 const Login = () => {
@@ -13,15 +13,20 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         console.log("Login form submitted", {userName, password});
-        if (userName === "Duy" && password === "duy123") {
+        try{
+            const result = await authAPI.login(userName, password);
+            console.log("Login successful:", result);
+            localStorage.setItem('token', result.token);
+            localStorage.setItem('userId', result.userId);
+
             navigate('/dashboard');
-        } else {
-            alert("Sai tên đăng nhập hoặc mật khẩu!");
+        } catch(error){
+            console.error("Login  haha error:", error);
+            alert(error.error || "Sai tên đăng nhập hoặc mật khẩu!");
         }
-        
     }
 
     return (

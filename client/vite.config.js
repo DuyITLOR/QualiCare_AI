@@ -7,13 +7,10 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
     port: 5173,
-    host: true,
+    host: '0.0.0.0',   // cho phép truy cập từ LAN
     proxy: {
-      // FE gọi /api/... -> proxy sang http://localhost:5050
-      // BE của bạn mount /chat ở app.use('/chat', ...) nên
-      // /api/chat/... sẽ thành http://localhost:5050/chat/...
       '/api': {
-        target: process.env.VITE_DEV_API || 'http://localhost:5050',
+        target: 'http://192.168.0.197:5050',  // IP LAN của máy bạn
         changeOrigin: true,
         secure: false,
       },
