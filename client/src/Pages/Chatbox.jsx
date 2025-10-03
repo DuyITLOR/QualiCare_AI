@@ -5,6 +5,7 @@ import {
   FaTrash, FaEllipsisV, FaCheck, FaEdit
 } from 'react-icons/fa';
 import Header from '../Components/Header';
+import MarkdownRenderer from '../Components/MarkdownRenderer';
 import { chatAPI } from '../services/chatAPI';
 
 const Chatbox = () => {
@@ -21,9 +22,8 @@ const Chatbox = () => {
   const [editTitle, setEditTitle] = useState('');
   const chatEndRef = useRef(null);
 
-  const user = localStorage.getItem('userId');
-  console.log('User ID:', user);
-
+  const userId = localStorage.getItem('userId');
+  console.log("UserID in Chatbox:", userId);
   const scrollToBottom = () => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -271,7 +271,7 @@ const Chatbox = () => {
     </div>
   );
 
-  // Mobile Chat View với FIXED header position
+  // Mobile Chat View với markdown support
   const ChatView = () => (
     <div className="flex flex-col h-full relative">
       {/* FIXED Sticky Chat Header - luôn nằm trên đầu */}
@@ -299,7 +299,13 @@ const Chatbox = () => {
                 ? 'bg-[#193701] text-white rounded-br-sm' 
                 : 'bg-white text-gray-800 rounded-bl-sm shadow-sm'
             }`}>
-              <p className="text-sm leading-relaxed">{msg.content}</p>
+              {msg.role === 'user' ? (
+                <p className="text-sm leading-relaxed">{msg.content}</p>
+              ) : (
+                <div className="text-sm leading-relaxed">
+                  <MarkdownRenderer content={msg.content} />
+                </div>
+              )}
             </div>
             {msg.role === 'user' && <FaUserCircle className="w-6 h-6 text-gray-400 mb-1 flex-shrink-0" />}
           </div>
@@ -434,14 +440,18 @@ const Chatbox = () => {
           </div>
         </aside>
 
-        {/* Center - Chat Area */}
+        {/* Center - Chat Area với markdown */}
         <main className="w-2/4 flex flex-col bg-gray-50">
           <div className="flex-grow p-6 overflow-y-auto">
             {messages.map(msg => (
               <div key={msg.id || msg.messageId} className={`flex items-end gap-3 my-4 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                 {msg.role === 'model' && <FaRobot className="w-8 h-8 text-[#193701]" />}
                 <div className={`max-w-lg p-3 rounded-2xl ${msg.role === 'user' ? 'bg-[#193701] text-white rounded-br-none' : 'bg-white text-gray-800 rounded-bl-none shadow-sm'}`}>
-                  <p>{msg.content}</p>
+                  {msg.role === 'user' ? (
+                    <p>{msg.content}</p>
+                  ) : (
+                    <MarkdownRenderer content={msg.content} />
+                  )}
                 </div>
                 {msg.role === 'user' && <FaUserCircle className="w-8 h-8 text-gray-400" />}
               </div>

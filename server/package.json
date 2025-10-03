@@ -8,7 +8,9 @@
     "dev": "nodemon index.js",
     "migrate": "npx prisma migrate dev",
     "generate": "npx prisma generate",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "setup-knowledge": "node scripts/setupQuailKnowledge.js",
+    "test-elasticsearch": "node -e \"require('./services/elasticsearchService').testSearch().then(() => process.exit(0))\""
   },
   "dependencies": {
     "@google/generative-ai": "^0.17.1",

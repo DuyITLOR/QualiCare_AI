@@ -1,0 +1,18 @@
+[2025-10-04 00:19:57,061][INFO ][node                     ] [Frank Payne] version[2.4.1], pid[2569], build[c67dc32/2016-09-27T18:57:55Z]
+[2025-10-04 00:19:57,069][INFO ][node                     ] [Frank Payne] initializing ...
+[2025-10-04 00:19:59,350][INFO ][plugins                  ] [Frank Payne] modules [reindex, lang-expression, lang-groovy], plugins [], sites []
+[2025-10-04 00:19:59,458][INFO ][env                      ] [Frank Payne] using [1] data paths, mounts [[/mnt/d (D:\)]], net usable_space [356.9gb], net total_space [476.9gb], spins? [possibly], types [9p]
+[2025-10-04 00:19:59,459][INFO ][env                      ] [Frank Payne] heap size [989.8mb], compressed ordinary object pointers [true]
+[2025-10-04 00:20:03,422][INFO ][node                     ] [Frank Payne] initialized
+[2025-10-04 00:20:03,422][INFO ][node                     ] [Frank Payne] starting ...
+[2025-10-04 00:20:03,588][INFO ][transport                ] [Frank Payne] publish_address {127.0.0.1:9300}, bound_addresses {[::1]:9300}, {127.0.0.1:9300}
+[2025-10-04 00:20:03,599][INFO ][discovery                ] [Frank Payne] elasticsearch/oBFBBW8EQAKDfAVVvmdp0w
+[2025-10-04 00:20:06,688][INFO ][cluster.service          ] [Frank Payne] new_master {Frank Payne}{oBFBBW8EQAKDfAVVvmdp0w}{127.0.0.1}{127.0.0.1:9300}, reason: zen-disco-join(elected_as_master, [0] joins received)
+[2025-10-04 00:20:06,726][INFO ][http                     ] [Frank Payne] publish_address {127.0.0.1:9200}, bound_addresses {[::1]:9200}, {127.0.0.1:9200}
+[2025-10-04 00:20:06,726][INFO ][node                     ] [Frank Payne] started
+[2025-10-04 00:20:07,007][INFO ][gateway                  ] [Frank Payne] recovered [2] indices into cluster_state
+[2025-10-04 00:20:08,152][INFO ][cluster.routing.allocation] [Frank Payne] Cluster health status changed from [RED] to [YELLOW] (reason: [shards started [[ask][0]] ...]).
+[2025-10-04 00:51:43,304][INFO ][node                     ] [Frank Payne] stopping ...
+[2025-10-04 00:51:43,467][INFO ][node                     ] [Frank Payne] stopped
+[2025-10-04 00:51:43,467][INFO ][node                     ] [Frank Payne] closing ...
+[2025-10-04 00:51:43,478][INFO ][node                     ] [Frank Payne] closed

@@ -81,21 +81,82 @@ class ChatService {
         content: msg.content
       }));
 
-      // Gọi Gemini API
-      const aiResponse = await geminiService.generateResponse(messages);
+      console.log('🚀 Processing message with enhanced AI service...');
+      
+      // Gọi Gemini API với Elasticsearch integration
+      const aiResult = await geminiService.generateResponse(messages);
 
-      // Lưu phản hồi AI
-      const botMessage = await this.addMessage(sessionId, 'model', aiResponse);
+      // Lưu phản hồi AI với metadata
+      const botMessage = await prisma.chatMessages.create({
+        data: {
+          sessionId: BigInt(sessionId),
+          role: 'model',
+          content: aiResult.content
+        }
+      });
+
+      const convertedBotMessage = this.convertBigIntToString(botMessage);
+
+      // Thêm metadata về response
+      convertedBotMessage.sources = aiResult.sources;
+      convertedBotMessage.hasKnowledgeBase = aiResult.hasKnowledgeBase;
+      convertedBotMessage.responseType = aiResult.responseType;
+
+      // Auto-update session title nếu là tin nhắn đầu tiên
+      if (messages.length <= 2) {
+        const title = userMessage.length > 50 ? 
+          userMessage.substring(0, 50) + '...' : 
+          userMessage;
+        
+        try {
+          await this.updateSessionTitle(sessionId, title);
+        } catch (titleError) {
+          console.warn('Failed to update session title:', titleError);
+        }
+      }
+
+      // Log thông tin response
+      const responseInfo = {
+        type: aiResult.responseType,
+        hasKnowledgeBase: aiResult.hasKnowledgeBase,
+        sourcesCount: aiResult.sources?.length || 0
+      };
+      
+      console.log('✅ Message processed successfully:', responseInfo);
+      
+      // Emoji cho log dễ nhìn
+      switch (aiResult.responseType) {
+        case 'quail_expert':
+          console.log('🎯 Used: Quail expertise with knowledge base');
+          break;
+        case 'quail_general':
+          console.log('🐦 Used: Quail general knowledge (no KB)');
+          break;
+        case 'general':
+          console.log('💬 Used: General conversation mode');
+          break;
+      }
 
       return {
         userMessage: userMsg,
-        botMessage
+        botMessage: convertedBotMessage
       };
     } catch (error) {
-      console.error('Error in sendMessage:', error);
+      console.error('❌ Error in sendMessage:', error);
       
-      // Lưu tin nhắn lỗi
-      const errorMessage = 'Xin lỗi, tôi đang gặp sự cố kỹ thuật. Vui lòng thử lại sau.';
+      // Lưu tin nhắn lỗi với thông tin hữu ích hơn
+      let errorMessage;
+      
+      if (error.message.includes('API key')) {
+        errorMessage = '🔧 Có vấn đề với cấu hình AI. Vui lòng liên hệ quản trị viên để được hỗ trợ.';
+      } else if (error.message.includes('quota') || error.message.includes('limit')) {
+        errorMessage = '⏰ Đã đạt giới hạn sử dụng AI. Vui lòng thử lại sau ít phút hoặc liên hệ hỗ trợ.';
+      } else if (error.message.includes('network') || error.message.includes('timeout')) {
+        errorMessage = '🌐 Có vấn đề về kết nối mạng. Vui lòng kiểm tra kết nối internet và thử lại.';
+      } else {
+        errorMessage = '⚠️ Xin lỗi, tôi đang gặp sự cố kỹ thuật. Vui lòng thử lại sau hoặc liên hệ hỗ trợ kỹ thuật.';
+      }
+      
       const botMessage = await this.addMessage(sessionId, 'model', errorMessage);
       
       return {
