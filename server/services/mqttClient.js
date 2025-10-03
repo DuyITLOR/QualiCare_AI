@@ -14,21 +14,21 @@ const client = mqtt.connect('mqtt://localhost:1883', {
 client.on("connect", () => {
     console.log("MQTT connected to borker")
 
-    client.subscribe("cages/CAGE-001/up", (err) => {
-        if (!err)
-        {
-            console.log("Subscribed to cages/CAGE-001/up")
-        } else {
-            console.error("Failed to subscribe:", err)
-        }
-    })
+    // client.subscribe("cages/CAGE-001/up", (err) => {
+    //     if (!err)
+    //     {
+    //         console.log("Subscribed to cages/CAGE-001/up")
+    //     } else {
+    //         console.error("Failed to subscribe:", err)
+    //     }
+    // })
 })
 
 
 client.on("message", async (topic, message) => { 
     try {
         const payload = JSON.parse(message.toString());
-        console.log("Received message:", payload);
+        console.log(`Topic: ${topic} - Received message: ${payload.humidity}`);
     }
     catch (error) {
         console.error("Error processing message:", error);
@@ -39,3 +39,6 @@ client.on("message", async (topic, message) => {
 client.on('reconnect', () => console.log('Reconnecting to MQTT broker...'));
 client.on('close', () => console.log('Disconnected from MQTT broker'));
 client.on('error', (error) => console.error('MQTT Error:', error));
+
+
+module.exports = client

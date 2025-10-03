@@ -3,6 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const chatRoutes = require('./routes/chatRoutes');
+const cageRoutes = require('./routes/cageRoutes');
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.get('/api/health', (_req, res) => {
 });
 
 app.use('/api/chat', chatRoutes);
+
 
 
 app.get('/', (_req, res) => res.send('Backend OK. Try /api/health'));

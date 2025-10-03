@@ -3,7 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const chatRoutes = require('./routes/chatRoutes');
 const authRoutes = require('./routes/authRoutes');
-
+const cageRoutes = require('./routes/cageRoutes');
 const app = express();
 const PORT = process.env.PORT || 5050;
 
@@ -14,6 +14,7 @@ app.use(express.json());
 // Routes
 app.use('/api/chat', chatRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/cages', cageRoutes);
 
 // Health check
 app.get('/health', (req, res) => {
