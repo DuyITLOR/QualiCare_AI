@@ -4,7 +4,7 @@ import { TbTemperature } from "react-icons/tb";
 import { WiHumidity } from "react-icons/wi";
 import { TbAlarmSmoke } from "react-icons/tb";
 import { FaWind } from "react-icons/fa6";
-import TopBar from '../Components/Topbar';
+import Header from '../Components/Header';
 import Sidebar from '../Components/Sidebar';
 import TestChart from '../Components/TestChart';
 import ChartCard from '../Components/ChartCard';
@@ -15,7 +15,7 @@ const labels = ["00:00", "04:00", "08:00", "12:00", "16:00", "20:00", "24:00"];
 const Dashboard = () => {
     return (
         <div>
-            <TopBar />
+            <Header />
             <Sidebar />
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 p-6 pt-20 md:pl-70'>
                 <SensorCard label="Nhiệt độ" Icon={TbTemperature} data="26.5oC" alertText="+2.1% so với hôm qua" />

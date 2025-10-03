@@ -5,13 +5,13 @@ const handleResponse = async (response) => {
     if (!response.ok) {
         const errorText = await response.text();
         throw new Error(`HTTP ${response.status}: ${errorText}`);
-    }
-
-    const data = await response.json();
-    console.log("Response data:", data);
-    
-    
-    return data.data;
+      }
+      
+      const data = await response.json();
+      if (!data.success) {
+        throw new Error(data.error || 'Unknown error occurred');
+      }
+      return data.data;
 };
 
 const createRequestOptions = (method = 'GET', body = null) => {

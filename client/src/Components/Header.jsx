@@ -7,7 +7,9 @@ import { IoMenu } from 'react-icons/io5';
 
 const Header = () => {
     const navigate = useNavigate();
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
+    const [showLogout, setShowLogout] = useState(false)
 
     useEffect(() => {
         document.body.style.overflow = isOpen ? 'hidden' : '';
@@ -16,6 +18,19 @@ const Header = () => {
             document.body.style.overflow = '';
         }
     }, [isOpen])
+
+    useEffect(() => {
+        const userId = localStorage.getItem('userId');
+        setIsLoggedIn(!!userId);
+    }, [])
+
+    const handleLogout = () => {
+        localStorage.removeItem('userId');
+        setIsLoggedIn(false);
+        navigate('/');
+    }
+
+
 
 
     return (
@@ -30,11 +45,26 @@ const Header = () => {
 
                 {/* desktop nav */}
                 <div className="hidden md:flex items-center space-x-8 text-gray-700 font-medium">
-                    <button onClick={() => navigate('/')} className="hover:text-green-800">Trang chủ</button>
-                    <button onClick={() => navigate('/service')} className="hover:text-green-800">Dịch vụ</button>
-                    <button onClick={() => navigate('/chatbox')} className="hover:text-green-800">Chat với AI</button>
-                    <button onClick={() => navigate('/forum')} className="hover:text-green-800">Diễn đàn</button>
-                    <img src={logoUser} onClick={() => navigate('/login')} className="h-5 w-5" alt="User" />
+                    {!isLoggedIn ? (
+                        <>
+                            <button onClick={() => navigate('/')} className="hover:text-green-800">Trang chủ</button>
+                            <button onClick={() => navigate('/service')} className="hover:text-green-800">Dịch vụ</button>
+                            <button onClick={() => navigate('/chatbox')} className="hover:text-green-800">Chat với AI</button>
+                            <button onClick={() => navigate('/forum')} className="hover:text-green-800">Diễn đàn</button>
+                            <img src={logoUser} onClick={() => navigate('/login')} className="h-5 w-5" alt="User" />
+
+                        </>
+                    ) : (
+                        <>
+                            <button onClick={() => navigate('/chatbox')}>Chat với AI</button>
+                            <button onClick={() => navigate('/forum')}>Diễn đàn</button>
+                            <button onClick={() => navigate('/dashboard')}>Dashboard</button>
+                            <img src={logoUser} onClick={() => setShowLogout(!showLogout)} className="h-5 w-5" alt="User" />
+                        </>
+                    )
+                    }
+
+
                 </div>
 
                 {/* mobile hamburger */}
@@ -58,34 +88,81 @@ const Header = () => {
                             className="absolute left-0 right-0 top-full mt-2 md:hidden z-50
                          bg-white rounded-xl shadow-lg ring-1 ring-black/5 overflow-hidden"
                         >
-                            <button
-                                onClick={() => { navigate('/'); setIsOpen(false); }}
-                                className="block w-full text-left px-6 py-3 text-gray-700 font-medium hover:bg-gray-50"
-                            >
-                                Trang chủ
-                            </button>
-                            <button
-                                onClick={() => { navigate('/service'); setIsOpen(false); }}
-                                className="block w-full text-left px-6 py-3 text-gray-700 font-medium hover:bg-gray-50"
-                            >
-                                Dịch vụ
-                            </button>
-                            <button
-                                onClick={() => { navigate('/chatbox'); setIsOpen(false); }}
-                                className="block w-full text-left px-6 py-3 text-gray-700 font-medium hover:bg-gray-50"
-                            >
-                                Chat với AI
-                            </button>
-                            <button
-                                onClick={() => { navigate('/forum'); setIsOpen(false); }}
-                                className="block w-full text-left px-6 py-3 text-gray-700 font-medium hover:bg-gray-50"
-                            >
-                                Diễn đàn
-                            </button>
+                            {
+                                !isLoggedIn ? (
+                                    <>
+                                        <button
+                                            onClick={() => { navigate('/'); setIsOpen(false); }}
+                                            className="block w-full text-left px-6 py-3 text-gray-700 font-medium hover:bg-gray-50"
+                                        >
+                                            Trang chủ
+                                        </button>
+                                        <button
+                                            onClick={() => { navigate('/service'); setIsOpen(false); }}
+                                            className="block w-full text-left px-6 py-3 text-gray-700 font-medium hover:bg-gray-50"
+                                        >
+                                            Dịch vụ
+                                        </button>
+                                        <button
+                                            onClick={() => { navigate('/chatbox'); setIsOpen(false); }}
+                                            className="block w-full text-left px-6 py-3 text-gray-700 font-medium hover:bg-gray-50"
+                                        >
+                                            Chat với AI
+                                        </button>
+                                        <button
+                                            onClick={() => { navigate('/forum'); setIsOpen(false); }}
+                                            className="block w-full text-left px-6 py-3 text-gray-700 font-medium hover:bg-gray-50"
+                                        >
+                                            Diễn đàn
+                                        </button>
+                                    </>
+                                ) : (
+                                    <>
+                                        <button
+                                            onClick={() => { navigate('/chatbox'); setIsOpen(false); }}
+                                            className="block w-full text-left px-6 py-3 text-gray-700 font-medium hover:bg-gray-50"
+                                        >
+                                            Chat với AI
+                                        </button>
+                                        <button
+                                            onClick={() => { navigate('/forum'); setIsOpen(false); }}
+                                            className="block w-full text-left px-6 py-3 text-gray-700 font-medium hover:bg-gray-50"
+                                        >
+                                            Diễn đàn
+                                        </button>
+                                        <button
+                                            onClick={() => { navigate('/dashboard'); setIsOpen(false); }}
+                                            className="block w-full text-left px-6 py-3 text-gray-700 font-medium hover:bg-gray-50"
+                                        >
+                                            Dashboard
+                                        </button>
+                                        <button
+                                            onClick={() => { setShowLogout(!showLogout); setIsOpen(false); }}
+                                            className="block w-full text-left px-6 py-3 text-gray-700 font-medium hover:bg-gray-50"
+                                        >
+                                            Đăng xuất
+                                        </button>
+                                    </>
+                                )
+
+                            }
+
 
                         </nav>
 
                     </>
+                )}
+
+
+                {showLogout && (
+                    <div className="absolute right-0 mt-12 mr-2 bg-white shadow-lg rounded-md z-50">
+                        <button
+                            onClick={handleLogout}
+                            className="block w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100"
+                        >
+                            Đăng xuất
+                        </button>
+                    </div>
                 )}
             </div>
         </div>
