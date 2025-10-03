@@ -1,3 +1,16 @@
 Cage
 POST: http://localhost:5050/api/cages/addEsp32, params {claimCode , userId}
+Postman: 
+{
+    "userId": 3,
+    "claimCode": "ABC123",
+    "cageName" : "Chuồng 1"
+}
+
 GET: http://localhost:5050/api/cages/getEsp32, params {userId}
+Postman: 
+{
+    "userId": 3
+}
+
+PUT: http://localhost:5050/api/cages/getEsp32

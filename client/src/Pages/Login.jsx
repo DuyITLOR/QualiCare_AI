@@ -18,9 +18,10 @@ const Login = () => {
         console.log("Login form submitted", {userName, password});
         try{
             const result = await authAPI.login(userName, password);
+            console.log(result)
             console.log("Login successful:", result);
-            localStorage.setItem('token', result.token);
-            localStorage.setItem('userId', result.userId);
+            // localStorage.setItem('token', result.token);
+            localStorage.setItem('userId', result);
 
             navigate('/dashboard');
         } catch(error){

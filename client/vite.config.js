@@ -10,7 +10,7 @@ export default defineConfig({
     host: '0.0.0.0',   // cho phép truy cập từ LAN
     proxy: {
       '/api': {
-        target: 'http://192.168.0.197:5050',  // IP LAN của máy bạn
+        target: 'http://192.168.120.136:5050',  // IP LAN của máy bạn
         changeOrigin: true,
         secure: false,
       },

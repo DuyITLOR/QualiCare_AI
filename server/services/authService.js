@@ -24,9 +24,7 @@ const login = async (email, password) => {
 
     return {
         token,
-        user: {
-            userId: user.userId.toString()
-        }
+        userId: user.userId.toString()
     }
 
 }

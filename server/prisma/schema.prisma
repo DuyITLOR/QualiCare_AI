@@ -89,6 +89,7 @@ model sensorData {
 model userCages {
   userId   BigInt
   cageId   String
+  cageName String?
   addedAt  DateTime @default(now()) @db.Timestamptz(6)
   cages    cages    @relation(fields: [cageId], references: [cageId], onDelete: Cascade, onUpdate: NoAction)
   accounts accounts @relation(fields: [userId], references: [userId], onDelete: Cascade, onUpdate: NoAction)

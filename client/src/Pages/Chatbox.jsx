@@ -21,7 +21,8 @@ const Chatbox = () => {
   const [editTitle, setEditTitle] = useState('');
   const chatEndRef = useRef(null);
 
-  const userId = 1;
+  const user = localStorage.getItem('userId');
+  console.log('User ID:', user);
 
   const scrollToBottom = () => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
