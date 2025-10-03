@@ -32,6 +32,7 @@ model alerts {
 
 model cages {
   cageId        String          @id
+  claimCode     String?        @unique
   alerts        alerts[]
   deviceControl deviceControl[]
   sensorData    sensorData[]
