@@ -23,7 +23,6 @@ const Chatbox = () => {
   const chatEndRef = useRef(null);
 
   const userId = localStorage.getItem('userId');
-  console.log("UserID in Chatbox:", userId);
   const scrollToBottom = () => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
