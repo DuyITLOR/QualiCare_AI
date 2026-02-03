@@ -40,7 +40,7 @@ const Header = () => {
                 {/* logo */}
                 <div className="flex items-center space-x-2 cursor-pointer" onClick={() => navigate('/')}>
                     <img src={logoIcon} className="h-10 w-10 rounded-full" alt="QualiCare AI" />
-                    <span className="font-bold text-lg text-gray-800 pl-2">QualiCare AI</span>
+                    <span className="font-bold text-lg text-gray-800 pl-2">QuailCare AI</span>
                 </div>
 
                 {/* desktop nav */}

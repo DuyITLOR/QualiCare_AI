@@ -56,8 +56,7 @@ const DevicesPage = () => {
   return (
     <div>
       <Header />
-      <Sidebar />
-      <div className="p-6 pt-20 md:pl-70">
+      <div className="p-6 pt-20">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-xl font-bold">Quản lý chuồng nuôi</h1>
           <button
