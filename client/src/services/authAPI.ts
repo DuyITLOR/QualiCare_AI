@@ -1,4 +1,4 @@
-const API_BASE_URL = (import.meta.env?.VITE_API_BASE || "/api") + "/auth";
+const API_BASE_URL = (import.meta.env.VITE_API_BASE || "/api") + "/auth";
 
 interface APIResponse<T> {
   success: boolean;

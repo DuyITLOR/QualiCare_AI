@@ -1,4 +1,4 @@
-const API_BASE_URL = (import.meta.env?.VITE_API_BASE || "/api") + "/chat";
+const API_BASE_URL = (import.meta.env.VITE_API_BASE || "/api") + "/chat";
 
 interface APIResponse<T> {
   success: boolean;
@@ -141,7 +141,7 @@ export const chatAPI = {
   testConnection: async () => {
     try {
       const response = await fetch(
-        (import.meta.env?.VITE_API_BASE || "/api") + "/health",
+        (import.meta.env.VITE_API_BASE || "/api") + "/health",
       );
 
       if (!response.ok) {
