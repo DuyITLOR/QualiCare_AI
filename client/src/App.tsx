@@ -8,17 +8,17 @@ import Login from './Pages/Login'
 import Dashboard from './Pages/Dashboard'
 import AddEsp32 from './Pages/AddEsp32'
 
-const App = () => {
+const App: React.FC = () => {
   return (
     <div>
       <Routes>
-        <Route path = "/" element = {<HomePage/>}/>
-        <Route path = "/forum" element = {<Forum/>}/>
-        <Route path = "/service" element = {<Services/>}/>
-        <Route path = "/chatbox" element = {<Chatbox/>}/>
-        <Route path = "/login" element = {<Login/>}/>
-        <Route path = "/dashboard" element = {<Dashboard/>}/>
-        <Route path = "/devices" element = {<AddEsp32/>}/>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/forum" element={<Forum />} />
+        <Route path="/service" element={<Services />} />
+        <Route path="/chatbox" element={<Chatbox />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/devices" element={<AddEsp32 />} />
       </Routes>
     </div>
   )
