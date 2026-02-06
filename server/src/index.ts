@@ -10,14 +10,16 @@ const app = express();
 const PORT = process.env.PORT || 5050;
 
 // Middleware - CORS configuration
-app.use(cors({
-  origin: [
-    'http://localhost:5173',
-    'http://localhost:5174',
-    'https://quali-care-ai-jfbl.vercel.app'
-  ],
-  credentials: true
-}));
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "http://localhost:5174",
+      "https://quali-care-ai-jfbl.vercel.app",
+    ],
+    credentials: true,
+  }),
+);
 app.use(express.json());
 
 // Start MQTT service

@@ -7,9 +7,19 @@ const router = Router();
 router.post("/sessions", async (req: Request, res: Response) => {
   try {
     const { userId, title } = req.body;
+    
+    if (!userId) {
+      res.status(400).json({
+        success: false,
+        error: "userId is required"
+      });
+      return;
+    }
+    
     const session = await chatService.createChatSession(userId, title);
     res.json({ success: true, data: session });
   } catch (error) {
+    console.error('Error creating chat session:', error);
     res.status(500).json({
       success: false,
       error: error instanceof Error ? error.message : "Unknown error",
@@ -20,10 +30,20 @@ router.post("/sessions", async (req: Request, res: Response) => {
 // Lấy danh sách session của user
 router.get("/sessions/:userId", async (req: Request, res: Response) => {
   try {
-    const userId = String(req.params.userId);
+    const userId = req.params.userId as string;
+    
+    if (!userId || userId === 'undefined') {
+      res.status(400).json({
+        success: false,
+        error: "userId is required"
+      });
+      return;
+    }
+    
     const sessions = await chatService.getChatSessions(userId);
     res.json({ success: true, data: sessions });
   } catch (error) {
+    console.error('Error getting chat sessions:', error);
     res.status(500).json({
       success: false,
       error: error instanceof Error ? error.message : "Unknown error",
