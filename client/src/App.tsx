@@ -7,10 +7,12 @@ import Chatbox from './Pages/Chatbox'
 import Login from './Pages/Login'
 import Dashboard from './Pages/Dashboard'
 import AddEsp32 from './Pages/AddEsp32'
+import { Toaster } from 'sonner'
 
 const App: React.FC = () => {
   return (
     <div>
+      <Toaster position="top-right" richColors />
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/forum" element={<Forum />} />

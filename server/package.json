@@ -1,5 +1,5 @@
 {
-  "name": "qualicare-ai-server",
+  "name": "server",
   "version": "1.0.0",
   "description": "QuailCare AI Backend Server",
   "main": "dist/index.js",
