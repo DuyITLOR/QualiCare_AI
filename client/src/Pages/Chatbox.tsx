@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { 
-  FaPlus, FaPaperPlane, FaRobot, FaUserCircle, 
+import {
+  FaPlus, FaPaperPlane, FaRobot, FaUserCircle,
   FaChevronRight, FaArrowLeft, FaBars, FaTimes,
   FaTrash, FaEllipsisV, FaCheck, FaEdit
 } from 'react-icons/fa';
 import Header from '../Components/Header';
 import MarkdownRenderer from '../Components/MarkdownRenderer';
 import { chatAPI } from '../services/chatAPI';
+import Cookies from 'js-cookie';
 
 const Chatbox = () => {
   const [messages, setMessages] = useState([]);
@@ -22,7 +23,7 @@ const Chatbox = () => {
   const [editTitle, setEditTitle] = useState('');
   const chatEndRef = useRef(null);
 
-  const userId = localStorage.getItem('userId');
+  const userId = Cookies.get('userId');
   const scrollToBottom = () => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -38,7 +39,7 @@ const Chatbox = () => {
       setLoading(true);
       const sessionsData = await chatAPI.getSessions(userId);
       setSessions(sessionsData);
-      
+
       if (sessionsData.length > 0 && window.innerWidth >= 768) {
         loadSession(sessionsData[0]);
       } else if (sessionsData.length === 0) {
@@ -58,7 +59,7 @@ const Chatbox = () => {
       const newSession = await chatAPI.createSession(userId);
       setCurrentSession(newSession);
       setSessions(prev => [newSession, ...prev]);
-      
+
       setMessages([
         {
           id: 'welcome',
@@ -67,7 +68,7 @@ const Chatbox = () => {
           createdAt: new Date().toISOString()
         }
       ]);
-      
+
       if (window.innerWidth < 768) {
         setShowChatList(false);
       }
@@ -83,7 +84,7 @@ const Chatbox = () => {
       setLoading(true);
       setCurrentSession(session);
       const messagesData = await chatAPI.getMessages(session.sessionId);
-      
+
       if (messagesData.length === 0) {
         setMessages([
           {
@@ -96,7 +97,7 @@ const Chatbox = () => {
       } else {
         setMessages(messagesData);
       }
-      
+
       if (window.innerWidth < 768) {
         setShowChatList(false);
       }
@@ -113,7 +114,7 @@ const Chatbox = () => {
 
     const userMessage = input.trim();
     setInput('');
-    
+
     const tempUserMsg = {
       id: `temp-${Date.now()}`,
       content: userMessage,
@@ -125,7 +126,7 @@ const Chatbox = () => {
 
     try {
       const result = await chatAPI.sendMessage(currentSession.sessionId, userMessage);
-      
+
       setMessages(prev => {
         const withoutTemp = prev.filter(msg => msg.id !== tempUserMsg.id);
         return [...withoutTemp, result.userMessage, result.botMessage];
@@ -133,7 +134,7 @@ const Chatbox = () => {
 
     } catch (error) {
       console.error('Error sending message:', error);
-      
+
       const errorMsg = {
         id: `error-${Date.now()}`,
         content: 'Xin lỗi, có lỗi xảy ra. Vui lòng thử lại sau.',
@@ -149,9 +150,9 @@ const Chatbox = () => {
   const handleDeleteSession = async (sessionId) => {
     try {
       await chatAPI.deleteSession(sessionId);
-      
+
       setSessions(prev => prev.filter(s => s.sessionId !== sessionId));
-      
+
       if (currentSession?.sessionId === sessionId) {
         const remainingSessions = sessions.filter(s => s.sessionId !== sessionId);
         if (remainingSessions.length > 0) {
@@ -160,7 +161,7 @@ const Chatbox = () => {
           createNewSession();
         }
       }
-      
+
       setShowDeleteConfirm(null);
     } catch (error) {
       console.error('Error deleting session:', error);
@@ -175,7 +176,7 @@ const Chatbox = () => {
       setCurrentSession(null);
       setMessages([]);
       setShowClearAllConfirm(false);
-      
+
       createNewSession();
     } catch (error) {
       console.error('Error clearing all sessions:', error);
@@ -203,18 +204,18 @@ const Chatbox = () => {
             <FaRobot className="w-6 h-6 text-[#193701]" />
           </div>
         </div>
-        
+
         <div className="space-y-2">
-          <button 
+          <button
             onClick={createNewSession}
             disabled={loading}
             className="w-full flex items-center justify-center gap-2 p-3 bg-[#193701] text-white rounded-lg disabled:opacity-50"
           >
             <FaPlus /> Cuộc trò chuyện mới
           </button>
-          
+
           {sessions.length > 0 && (
-            <button 
+            <button
               onClick={() => setShowClearAllConfirm(true)}
               className="w-full flex items-center justify-center gap-2 p-2 border border-red-300 text-red-600 rounded-lg hover:bg-red-50"
             >
@@ -237,13 +238,13 @@ const Chatbox = () => {
         ) : (
           <div className="p-4 space-y-3">
             {sessions.map(session => (
-              <div 
+              <div
                 key={session.sessionId}
                 className="bg-white rounded-lg shadow-sm overflow-hidden"
               >
                 <div className="flex items-center p-4">
                   <FaRobot className="w-8 h-8 text-[#193701] flex-shrink-0" />
-                  <div 
+                  <div
                     className="flex-1 min-w-0 cursor-pointer ml-3"
                     onClick={() => loadSession(session)}
                   >
@@ -275,7 +276,7 @@ const Chatbox = () => {
     <div className="flex flex-col h-full relative">
       {/* FIXED Sticky Chat Header - luôn nằm trên đầu */}
       <div className="bg-white border-b p-4 flex items-center gap-3 fixed top-14 left-0 right-0 z-20 md:hidden">
-        <button 
+        <button
           onClick={() => setShowChatList(true)}
           className="p-2 hover:bg-gray-100 rounded-full"
         >
@@ -293,11 +294,10 @@ const Chatbox = () => {
         {messages.map(msg => (
           <div key={msg.id || msg.messageId} className={`flex items-end gap-3 mb-4 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
             {msg.role === 'model' && <FaRobot className="w-6 h-6 text-[#193701] mb-1 flex-shrink-0" />}
-            <div className={`max-w-[80%] p-3 rounded-2xl ${
-              msg.role === 'user' 
-                ? 'bg-[#193701] text-white rounded-br-sm' 
+            <div className={`max-w-[80%] p-3 rounded-2xl ${msg.role === 'user'
+                ? 'bg-[#193701] text-white rounded-br-sm'
                 : 'bg-white text-gray-800 rounded-bl-sm shadow-sm'
-            }`}>
+              }`}>
               {msg.role === 'user' ? (
                 <p className="text-sm leading-relaxed">{msg.content}</p>
               ) : (
@@ -309,20 +309,20 @@ const Chatbox = () => {
             {msg.role === 'user' && <FaUserCircle className="w-6 h-6 text-gray-400 mb-1 flex-shrink-0" />}
           </div>
         ))}
-        
+
         {isTyping && (
           <div className="flex items-end gap-3 mb-4 justify-start">
             <FaRobot className="w-6 h-6 text-[#193701] mb-1" />
             <div className="bg-white rounded-2xl rounded-bl-sm shadow-sm p-3">
               <div className="flex space-x-1">
                 <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
               </div>
             </div>
           </div>
         )}
-        
+
         <div ref={chatEndRef} />
         {/* Padding bottom để tránh input */}
         <div className="h-32"></div>
@@ -339,8 +339,8 @@ const Chatbox = () => {
             placeholder={!currentSession ? "Đang tải..." : isTyping ? "AI đang trả lời..." : "Nhập câu hỏi..."}
             className="w-full py-3 pl-4 pr-12 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-[#ffc130] disabled:opacity-50"
           />
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             disabled={!currentSession || isTyping || !input.trim()}
             className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-[#ffc130] text-[#193701] rounded-full hover:bg-yellow-500 transition-colors disabled:opacity-50"
           >
@@ -372,7 +372,7 @@ const Chatbox = () => {
   return (
     <div className="flex flex-col h-screen bg-gray-100 pt-16">
       <Header />
-      
+
       {/* Mobile View */}
       <div className="md:hidden flex-1">
         {showChatList ? <ChatListView /> : <ChatView />}
@@ -383,16 +383,16 @@ const Chatbox = () => {
         {/* Left Sidebar - Chat History */}
         <aside className="w-1/4 bg-white border-r p-4 flex flex-col">
           <div className="space-y-2 mb-4">
-            <button 
+            <button
               onClick={createNewSession}
               disabled={loading}
               className="flex items-center justify-center gap-2 w-full p-3 text-lg font-semibold bg-[#193701] text-white rounded-lg hover:bg-green-900 transition-colors disabled:opacity-50"
             >
               <FaPlus /> Cuộc trò chuyện mới
             </button>
-            
+
             {sessions.length > 0 && (
-              <button 
+              <button
                 onClick={() => setShowClearAllConfirm(true)}
                 className="flex items-center justify-center gap-2 w-full p-2 border border-red-300 text-red-600 rounded-lg hover:bg-red-50"
               >
@@ -400,23 +400,22 @@ const Chatbox = () => {
               </button>
             )}
           </div>
-          
+
           <h2 className="text-lg font-bold text-[#ffc130] mb-2">Lịch sử</h2>
           <div className="flex-grow overflow-y-auto">
             {loading ? (
               <div className="text-center text-gray-500">Đang tải...</div>
             ) : (
               sessions.map(session => (
-                <div 
+                <div
                   key={session.sessionId}
-                  className={`p-3 mb-2 rounded-lg transition-colors group ${
-                    currentSession?.sessionId === session.sessionId 
-                      ? 'bg-yellow-100 border border-[#ffc130]' 
+                  className={`p-3 mb-2 rounded-lg transition-colors group ${currentSession?.sessionId === session.sessionId
+                      ? 'bg-yellow-100 border border-[#ffc130]'
                       : 'hover:bg-gray-100'
-                  }`}
+                    }`}
                 >
                   <div className="flex items-start justify-between">
-                    <div 
+                    <div
                       onClick={() => loadSession(session)}
                       className="flex-1 cursor-pointer"
                     >
@@ -455,20 +454,20 @@ const Chatbox = () => {
                 {msg.role === 'user' && <FaUserCircle className="w-8 h-8 text-gray-400" />}
               </div>
             ))}
-            
+
             {isTyping && (
               <div className="flex items-end gap-3 my-4 justify-start">
                 <FaRobot className="w-8 h-8 text-[#193701]" />
                 <div className="bg-white text-gray-800 rounded-2xl rounded-bl-none shadow-sm p-3">
                   <div className="flex space-x-1">
                     <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                   </div>
                 </div>
               </div>
             )}
-            
+
             <div ref={chatEndRef} />
           </div>
           <div className="p-4 bg-white border-t">
@@ -481,8 +480,8 @@ const Chatbox = () => {
                 placeholder={!currentSession ? "Đang tải..." : isTyping ? "AI đang trả lời..." : "Nhập câu hỏi về chăn nuôi cút..."}
                 className="w-full py-3 pl-4 pr-14 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ffc130] disabled:opacity-50"
               />
-              <button 
-                type="submit" 
+              <button
+                type="submit"
                 disabled={!currentSession || isTyping || !input.trim()}
                 className="absolute right-3 top-1/2 -translate-y-1/2 p-2 bg-[#ffc130] text-[#193701] rounded-full hover:bg-yellow-500 transition-colors disabled:opacity-50"
               >
@@ -494,43 +493,43 @@ const Chatbox = () => {
 
         {/* Right Sidebar - AI Info */}
         <aside className="w-1/4 bg-white border-l p-6 flex flex-col items-center text-center">
-            <FaRobot className="w-24 h-24 text-[#193701] mb-4" />
-            <h2 className="text-2xl font-bold text-[#ffc130]">QuailCare AI</h2>
-            <p className="text-gray-600 mb-6">Người bạn đồng hành của nhà nông</p>
-            
-            <div className="w-full text-left mb-6">
-                <h3 className="font-bold text-[#ffc130] mb-2">Nguồn kiến thức:</h3>
-                <p className="text-sm text-gray-500">Chăn nuôi cút chuyên nghiệp</p>
-                <p className="text-sm text-gray-500">Phòng chống bệnh tật</p>
-                <p className="text-sm text-gray-500">Công nghệ IoT trong nông nghiệp</p>
-            </div>
+          <FaRobot className="w-24 h-24 text-[#193701] mb-4" />
+          <h2 className="text-2xl font-bold text-[#ffc130]">QuailCare AI</h2>
+          <p className="text-gray-600 mb-6">Người bạn đồng hành của nhà nông</p>
 
-            <div className="w-full text-left mb-6">
-                <h3 className="font-bold text-[#ffc130] mb-2">Gợi ý câu hỏi:</h3>
-                <div 
-                  className="text-sm text-gray-500 p-2 rounded-md hover:bg-gray-100 cursor-pointer"
-                  onClick={() => setInput("Cách úm cút con hiệu quả?")}
-                >
-                  - Cách úm cút con hiệu quả?
-                </div>
-                <div 
-                  className="text-sm text-gray-500 p-2 rounded-md hover:bg-gray-100 cursor-pointer"
-                  onClick={() => setInput("Thức ăn cho cút đẻ trứng?")}
-                >
-                  - Thức ăn cho cút đẻ trứng?
-                </div>
-                <div 
-                  className="text-sm text-gray-500 p-2 rounded-md hover:bg-gray-100 cursor-pointer"
-                  onClick={() => setInput("Phòng chống bệnh Newcastle?")}
-                >
-                  - Phòng chống bệnh Newcastle?
-                </div>
-            </div>
+          <div className="w-full text-left mb-6">
+            <h3 className="font-bold text-[#ffc130] mb-2">Nguồn kiến thức:</h3>
+            <p className="text-sm text-gray-500">Chăn nuôi cút chuyên nghiệp</p>
+            <p className="text-sm text-gray-500">Phòng chống bệnh tật</p>
+            <p className="text-sm text-gray-500">Công nghệ IoT trong nông nghiệp</p>
+          </div>
 
-            <button className="w-full mt-auto p-3 border-2 border-[#193701] text-[#193701] font-bold rounded-lg flex justify-between items-center hover:bg-[#193701] hover:text-white transition-colors">
-                Trò chuyện với chuyên gia
-                <FaChevronRight />
-            </button>
+          <div className="w-full text-left mb-6">
+            <h3 className="font-bold text-[#ffc130] mb-2">Gợi ý câu hỏi:</h3>
+            <div
+              className="text-sm text-gray-500 p-2 rounded-md hover:bg-gray-100 cursor-pointer"
+              onClick={() => setInput("Cách úm cút con hiệu quả?")}
+            >
+              - Cách úm cút con hiệu quả?
+            </div>
+            <div
+              className="text-sm text-gray-500 p-2 rounded-md hover:bg-gray-100 cursor-pointer"
+              onClick={() => setInput("Thức ăn cho cút đẻ trứng?")}
+            >
+              - Thức ăn cho cút đẻ trứng?
+            </div>
+            <div
+              className="text-sm text-gray-500 p-2 rounded-md hover:bg-gray-100 cursor-pointer"
+              onClick={() => setInput("Phòng chống bệnh Newcastle?")}
+            >
+              - Phòng chống bệnh Newcastle?
+            </div>
+          </div>
+
+          <button className="w-full mt-auto p-3 border-2 border-[#193701] text-[#193701] font-bold rounded-lg flex justify-between items-center hover:bg-[#193701] hover:text-white transition-colors">
+            Trò chuyện với chuyên gia
+            <FaChevronRight />
+          </button>
         </aside>
       </div>
 

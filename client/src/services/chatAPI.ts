@@ -1,4 +1,4 @@
-const API_BASE_URL = (import.meta.env.VITE_API_BASE || "/api") + "/chat";
+const API_BASE_URL = import.meta.env.VITE_API_BASE || "/api";
 
 interface APIResponse<T> {
   success: boolean;
@@ -44,7 +44,7 @@ export const chatAPI = {
   ) => {
     try {
       const response = await fetch(
-        `${API_BASE_URL}/sessions`,
+        `${API_BASE_URL}/api/chat/sessions`,
         createRequestOptions("POST", { userId, title }),
       );
       return await handleResponse(response);
@@ -57,7 +57,7 @@ export const chatAPI = {
   getSessions: async (userId: string) => {
     try {
       const response = await fetch(
-        `${API_BASE_URL}/sessions/${userId}`,
+        `${API_BASE_URL}/api/chat/sessions/${userId}`,
         createRequestOptions("GET"),
       );
       return await handleResponse(response);
@@ -70,7 +70,7 @@ export const chatAPI = {
   getMessages: async (sessionId: string) => {
     try {
       const response = await fetch(
-        `${API_BASE_URL}/sessions/${sessionId}/messages`,
+        `${API_BASE_URL}/api/chat/sessions/${sessionId}/messages`,
         createRequestOptions("GET"),
       );
       return await handleResponse(response);
@@ -83,7 +83,7 @@ export const chatAPI = {
   sendMessage: async (sessionId: string, message: string) => {
     try {
       const response = await fetch(
-        `${API_BASE_URL}/sessions/${sessionId}/messages`,
+        `${API_BASE_URL}/api/chat/sessions/${sessionId}/messages`,
         createRequestOptions("POST", { message }),
       );
       return await handleResponse(response);
@@ -96,7 +96,7 @@ export const chatAPI = {
   updateSessionTitle: async (sessionId: string, title: string) => {
     try {
       const response = await fetch(
-        `${API_BASE_URL}/sessions/${sessionId}`,
+        `${API_BASE_URL}/api/chat/sessions/${sessionId}`,
         createRequestOptions("PUT", { title }),
       );
       return await handleResponse(response);
@@ -111,7 +111,7 @@ export const chatAPI = {
   deleteSession: async (sessionId: string) => {
     try {
       const response = await fetch(
-        `${API_BASE_URL}/sessions/${sessionId}`,
+        `${API_BASE_URL}/api/chat/sessions/${sessionId}`,
         createRequestOptions("DELETE"),
       );
       return await handleResponse(response);
@@ -126,7 +126,7 @@ export const chatAPI = {
   deleteAllSessions: async (userId: string) => {
     try {
       const response = await fetch(
-        `${API_BASE_URL}/sessions/user/${userId}`,
+        `${API_BASE_URL}/api/chat/sessions/user/${userId}`,
         createRequestOptions("DELETE"),
       );
       return await handleResponse(response);
