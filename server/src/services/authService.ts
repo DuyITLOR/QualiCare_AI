@@ -16,7 +16,7 @@ interface RegisterResult {
   };
 }
 
-export const login = async (
+export const signin = async (
   email: string,
   password: string,
 ): Promise<LoginResult> => {
@@ -43,7 +43,7 @@ export const login = async (
   };
 };
 
-export const register = async (
+export const signup = async (
   email: string,
   password: string,
   phoneNumber: string,
@@ -62,13 +62,22 @@ export const register = async (
 
   const passwordHash = await bcrypt.hash(password, 10);
 
+  // Parse date - set to null if invalid
+  let parsedDate: Date | null = null;
+  if (date) {
+    const tempDate = new Date(date);
+    if (!isNaN(tempDate.getTime())) {
+      parsedDate = tempDate;
+    }
+  }
+
   const user = await prisma.accounts.create({
     data: {
       email,
       passwordHash,
       phoneNumber,
       name,
-      date: new Date(date),
+      date: parsedDate,
     },
   });
 

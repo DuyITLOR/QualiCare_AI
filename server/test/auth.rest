@@ -1,0 +1,22 @@
+@baseURL = http://localhost:5050
+
+### Signup - Đăng ký tài khoản mới
+POST {{baseURL}}/api/auth/signup
+Content-Type: application/json
+
+{
+  "email": "lenhutduy@gmail.com",
+  "password": "123456789",
+  "phoneNumber": "0914813749",
+  "name": "Lê Nhựt Duy",
+  "date": "15-11-2005"
+}
+
+### Login - Đăng nhập
+POST {{baseURL}}/api/auth/signin
+Content-Type: application/json
+
+{
+  "email": "lenhutduy@gmail.com",
+  "password": "123456789"
+}
