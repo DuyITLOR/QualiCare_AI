@@ -6,6 +6,11 @@ interface APIResponse<T> {
   error?: string;
 }
 
+interface LoginResponse {
+  token: string;
+  userId: string;
+}
+
 const handleResponse = async <T>(response: Response): Promise<T> => {
   if (!response.ok) {
     const errorText = await response.text();
@@ -36,11 +41,11 @@ const createRequestOptions = (
 };
 
 export const authAPI = {
-  login: async (email: string, password: string) => {
+  login: async (email: string, password: string): Promise<string> => {
     const response = await fetch(
       `${API_BASE_URL.replace("/chat", "")}/login`,
       createRequestOptions("POST", { email, password }),
     );
-    return await handleResponse(response);
+    return await handleResponse<string>   (response);
   },
 };
