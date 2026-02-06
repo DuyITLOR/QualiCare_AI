@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import logoIcon from '../assets/quailcare-logo.png';
 import logoUser from '../assets/user.svg'; // simple <img>, no ?react
 import { IoMenu } from 'react-icons/io5';
+import Cookies from 'js-cookie';
 
 const Header = () => {
     const navigate = useNavigate();
@@ -20,12 +21,13 @@ const Header = () => {
     }, [isOpen])
 
     useEffect(() => {
-        const userId = localStorage.getItem('userId');
+        const userId = Cookies.get('userId');
         setIsLoggedIn(!!userId);
     }, [])
 
     const handleLogout = () => {
-        localStorage.removeItem('userId');
+        Cookies.remove('userId');
+        Cookies.remove('token');
         setIsLoggedIn(false);
         navigate('/');
     }

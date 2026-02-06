@@ -1,0 +1,23 @@
+@baseURL = http://localhost:5050
+@userId = 28
+@sessionId = 30
+
+### Create Session
+POST {{baseURL}}/api/chat/sessions
+Content-Type: application/json
+
+{
+  "userId": "{{userId}}",
+  "title": "Test Chat"
+}
+
+### Send Message - Gửi câu hỏi
+POST {{baseURL}}/api/chat/sessions/{{sessionId}}/messages
+Content-Type: application/json
+
+{
+  "message": "Chim cút cần ăn gì?"
+}
+
+### Get Messages - Xem tin nhắn
+GET {{baseURL}}/api/chat/sessions/{{sessionId}}/messages

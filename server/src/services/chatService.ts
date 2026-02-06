@@ -97,7 +97,7 @@ class ChatService {
         content: msg.content,
       }));
 
-      console.log("🚀 Processing message with enhanced AI service...");
+      console.log("Processing message with enhanced AI service...");
 
       const aiResult: AIResult = await geminiService.generateResponse(messages);
 
@@ -127,7 +127,7 @@ class ChatService {
         }
       }
 
-      console.log("✅ Message processed successfully");
+      console.log("Message processed successfully");
 
       return {
         userMessage: userMsg,

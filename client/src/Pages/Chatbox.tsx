@@ -37,7 +37,7 @@ const Chatbox = () => {
   const loadSessions = async () => {
     try {
       setLoading(true);
-      const sessionsData = await chatAPI.getSessions(userId);
+      const sessionsData: any = await chatAPI.getSessions(userId);
       setSessions(sessionsData);
 
       if (sessionsData.length > 0 && window.innerWidth >= 768) {
@@ -83,7 +83,7 @@ const Chatbox = () => {
     try {
       setLoading(true);
       setCurrentSession(session);
-      const messagesData = await chatAPI.getMessages(session.sessionId);
+      const messagesData: any = await chatAPI.getMessages(session.sessionId);
 
       if (messagesData.length === 0) {
         setMessages([
@@ -125,7 +125,7 @@ const Chatbox = () => {
     setIsTyping(true);
 
     try {
-      const result = await chatAPI.sendMessage(currentSession.sessionId, userMessage);
+      const result: any = await chatAPI.sendMessage(currentSession.sessionId, userMessage);
 
       setMessages(prev => {
         const withoutTemp = prev.filter(msg => msg.id !== tempUserMsg.id);
@@ -243,7 +243,7 @@ const Chatbox = () => {
                 className="bg-white rounded-lg shadow-sm overflow-hidden"
               >
                 <div className="flex items-center p-4">
-                  <FaRobot className="w-8 h-8 text-[#193701] flex-shrink-0" />
+                  <FaRobot className="w-8 h-8 text-[#193701] shrink-0" />
                   <div
                     className="flex-1 min-w-0 cursor-pointer ml-3"
                     onClick={() => loadSession(session)}
@@ -258,7 +258,7 @@ const Chatbox = () => {
                       e.stopPropagation();
                       setShowDeleteConfirm(session.sessionId);
                     }}
-                    className="p-2 text-red-500 hover:bg-red-50 rounded-full flex-shrink-0 ml-2"
+                    className="p-2 text-red-500 hover:bg-red-50 rounded-full shrink-0 ml-2"
                   >
                     <FaTrash className="w-4 h-4" />
                   </button>
@@ -293,10 +293,10 @@ const Chatbox = () => {
       <div className="flex-1 overflow-y-auto p-4 bg-gray-50 pt-20">
         {messages.map(msg => (
           <div key={msg.id || msg.messageId} className={`flex items-end gap-3 mb-4 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-            {msg.role === 'model' && <FaRobot className="w-6 h-6 text-[#193701] mb-1 flex-shrink-0" />}
+            {msg.role === 'model' && <FaRobot className="w-6 h-6 text-[#193701] mb-1 shrink-0" />}
             <div className={`max-w-[80%] p-3 rounded-2xl ${msg.role === 'user'
-                ? 'bg-[#193701] text-white rounded-br-sm'
-                : 'bg-white text-gray-800 rounded-bl-sm shadow-sm'
+              ? 'bg-[#193701] text-white rounded-br-sm'
+              : 'bg-white text-gray-800 rounded-bl-sm shadow-sm'
               }`}>
               {msg.role === 'user' ? (
                 <p className="text-sm leading-relaxed">{msg.content}</p>
@@ -306,7 +306,7 @@ const Chatbox = () => {
                 </div>
               )}
             </div>
-            {msg.role === 'user' && <FaUserCircle className="w-6 h-6 text-gray-400 mb-1 flex-shrink-0" />}
+            {msg.role === 'user' && <FaUserCircle className="w-6 h-6 text-gray-400 mb-1 shrink-0" />}
           </div>
         ))}
 
@@ -379,7 +379,7 @@ const Chatbox = () => {
       </div>
 
       {/* Desktop View - với nút xóa bên phải */}
-      <div className="hidden md:flex flex-grow overflow-hidden">
+      <div className="hidden md:flex grow overflow-hidden">
         {/* Left Sidebar - Chat History */}
         <aside className="w-1/4 bg-white border-r p-4 flex flex-col">
           <div className="space-y-2 mb-4">
@@ -402,7 +402,7 @@ const Chatbox = () => {
           </div>
 
           <h2 className="text-lg font-bold text-[#ffc130] mb-2">Lịch sử</h2>
-          <div className="flex-grow overflow-y-auto">
+          <div className="grow overflow-y-auto">
             {loading ? (
               <div className="text-center text-gray-500">Đang tải...</div>
             ) : (
@@ -410,8 +410,8 @@ const Chatbox = () => {
                 <div
                   key={session.sessionId}
                   className={`p-3 mb-2 rounded-lg transition-colors group ${currentSession?.sessionId === session.sessionId
-                      ? 'bg-yellow-100 border border-[#ffc130]'
-                      : 'hover:bg-gray-100'
+                    ? 'bg-yellow-100 border border-[#ffc130]'
+                    : 'hover:bg-gray-100'
                     }`}
                 >
                   <div className="flex items-start justify-between">
@@ -427,7 +427,7 @@ const Chatbox = () => {
                         e.stopPropagation();
                         setShowDeleteConfirm(session.sessionId);
                       }}
-                      className="opacity-0 group-hover:opacity-100 p-1 text-red-500 hover:bg-red-100 rounded text-sm transition-opacity ml-2 flex-shrink-0"
+                      className="opacity-0 group-hover:opacity-100 p-1 text-red-500 hover:bg-red-100 rounded text-sm transition-opacity ml-2 shrink-0"
                     >
                       <FaTrash className="w-3 h-3" />
                     </button>
@@ -440,7 +440,7 @@ const Chatbox = () => {
 
         {/* Center - Chat Area với markdown */}
         <main className="w-2/4 flex flex-col bg-gray-50">
-          <div className="flex-grow p-6 overflow-y-auto">
+          <div className="grow p-6 overflow-y-auto">
             {messages.map(msg => (
               <div key={msg.id || msg.messageId} className={`flex items-end gap-3 my-4 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                 {msg.role === 'model' && <FaRobot className="w-8 h-8 text-[#193701]" />}

@@ -195,7 +195,7 @@ void loop() {
     char mqtt_message[256];
     serializeJson(doc, mqtt_message);
 
-    publishMessage("  s", mqtt_message, true);
+    publishMessage("s", mqtt_message, true);
   }
 
   delay(10); 

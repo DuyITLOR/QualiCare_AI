@@ -35,7 +35,8 @@ const MarkdownRenderer = ({ content }) => {
         em: ({ children }) => (
           <em className="italic text-gray-700">{children}</em>
         ),
-        code: ({ inline, children }) => {
+        code: ({ children, ...props }: any) => {
+          const inline = !props.className;
           if (inline) {
             return (
               <code className="bg-gray-100 px-1 py-0.5 rounded text-sm font-mono text-gray-800">
@@ -72,10 +73,10 @@ const MarkdownRenderer = ({ content }) => {
           </td>
         ),
         a: ({ href, children }) => (
-          <a 
-            href={href} 
-            target="_blank" 
-            rel="noopener noreferrer" 
+          <a
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
             className="text-blue-600 hover:text-blue-800 underline"
           >
             {children}
