@@ -1,52 +1,118 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import SensorCard from '../Components/SensorCard'
-import { TbTemperature } from "react-icons/tb";
-import { WiHumidity } from "react-icons/wi";
-import { TbAlarmSmoke } from "react-icons/tb";
-import { FaWind } from "react-icons/fa6";
 import Header from '../Components/Header';
 import Sidebar from '../Components/Sidebar';
-import TestChart from '../Components/TestChart';
 import ChartCard from '../Components/ChartCard';
-
-
-const labels = ["00:00", "04:00", "08:00", "12:00", "16:00", "20:00", "24:00"];
+import { sensorAPI } from '../services/sensorAPI';
 
 const Dashboard = () => {
+    const [sensorData, setSensorData] = useState<any>(null);
+    const [historyData, setHistoryData] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+    const cageId = 'CAGE-001'; // TODO: Get from user's cages
+
+    // Fetch latest sensor data
+    const fetchSensorData = async () => {
+        try {
+            const data = await sensorAPI.getLatest(cageId);
+            setSensorData(data);
+            setLoading(false);
+        } catch (error) {
+            console.error('Error fetching sensor data:', error);
+            setLoading(false);
+        }
+    };
+
+    // Fetch sensor history for charts
+    const fetchHistoryData = async () => {
+        try {
+            const data = await sensorAPI.getHistory(cageId, 20);
+            setHistoryData(data.reverse()); // Reverse để hiển thị từ cũ đến mới
+        } catch (error) {
+            console.error('Error fetching history data:', error);
+        }
+    };
+
+    // Polling every 5 seconds
+    useEffect(() => {
+        fetchSensorData();
+        fetchHistoryData();
+        const interval = setInterval(() => {
+            fetchSensorData();
+            fetchHistoryData();
+        }, 5000);
+        return () => clearInterval(interval);
+    }, []);
+
+    // Prepare chart data
+    const chartLabels = historyData.map((item) => {
+        const date = new Date(item.dateTime);
+        return `${date.getHours()}:${date.getMinutes().toString().padStart(2, '0')}`;
+    });
+
+    const temperatureData = historyData.map((item) => item.temperature || 0);
+    const humidityData = historyData.map((item) => item.humidity || 0);
+    const nh3Data = historyData.map((item) => item.nh3 || 0);
+    const windSpeedData = historyData.map((item) => item.windSpeed || 0);
+
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center h-screen">
+                <p>Đang tải dữ liệu cảm biến...</p>
+            </div>
+        );
+    }
+
     return (
         <div>
             <Header />
             <Sidebar />
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 p-6 pt-20 md:pl-70'>
-                <SensorCard label="Nhiệt độ" Icon={TbTemperature} data="26.5oC" alertText="+2.1% so với hôm qua" />
-                <SensorCard label="Độ ẩm" Icon={WiHumidity} data="62%" alertText="Giá trị an toàn" />
-                <SensorCard label="Nồng độ NH3" Icon={TbAlarmSmoke} data="18ppm" alertText="Cần theo dõi" />
-                <SensorCard label="Tốc độ gió" Icon={FaWind} data="3.2m/s" alertText="Thông gió tốt" />
+                <SensorCard
+                    label="Nhiệt độ"
+                    data={sensorData ? `${sensorData.temperature}°C` : "N/A"}
+                    alertText="Nhiệt độ bình thường"
+                />
+                <SensorCard
+                    label="Độ ẩm"
+                    data={sensorData ? `${sensorData.humidity}%` : "N/A"}
+                    alertText="Giá trị an toàn"
+                />
+                <SensorCard
+                    label="Nồng độ NH3"
+                    data={sensorData ? `${sensorData.nh3} ppm` : "N/A"}
+                    alertText={sensorData?.nh3 > 50 ? "Cần theo dõi" : "Tốt"}
+                />
+                <SensorCard
+                    label="Tốc độ gió"
+                    data={sensorData ? `${sensorData.windSpeed} m/s` : "N/A"}
+                    alertText="Thông gió tốt"
+                />
             </div>
 
             <div className='grid grid-cols-1 md:grid-cols-2  gap-6 p-6 pt-5 md:pl-70'>
                 <ChartCard
                     title="Nhiệt độ (°C)"
-                    labels={labels}
-                    values={[24, 23.8, 26, 28, 27, 25, 24]}
+                    labels={chartLabels}
+                    values={temperatureData}
                     color="rgb(75,192,192)"
                 />
                 <ChartCard
                     title="Độ ẩm (%)"
-                    labels={labels}
-                    values={[65, 67, 62, 59, 61, 64, 66]}
+                    labels={chartLabels}
+                    values={humidityData}
                     color="rgb(37,99,235)"
                 />
                 <ChartCard
                     title="Nồng độ NH3 (ppm)"
-                    labels={labels}
-                    values={[12, 14, 18, 23, 19, 16, 13]}
+                    labels={chartLabels}
+                    values={nh3Data}
                     color="rgb(220,38,38)"
                 />
                 <ChartCard
                     title="Tốc độ gió (m/s)"
-                    labels={labels}
-                    values={[2, 1.8, 3, 4.2, 3.6, 2.8, 2.2]}
+                    labels={chartLabels}
+                    values={windSpeedData}
                     color="rgb(202,138,4)"
                 />
             </div>
