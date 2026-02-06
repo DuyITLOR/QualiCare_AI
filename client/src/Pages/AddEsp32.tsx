@@ -1,57 +1,59 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Header from "../Components/Header";
 import Sidebar from "../Components/Sidebar";
 
 const DevicesPage = () => {
+  const navigate = useNavigate();
   const [cages, setCages] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [form, setForm] = useState({ cageName: "", claimCode: "" });
   const userId = localStorage.getItem("userId");
 
-//   // Fetch cages
-//   const fetchCages = async () => {
-//     try {
-//       const res = await fetch(`/api/cages/getEsp32?userId=${userId}`);
-//       const data = await res.json();
-//       if (res.ok) setCages(data.cages);
-//     } catch (err) {
-//       console.error("Error fetching cages:", err);
-//     }
-//   };
+  //   // Fetch cages
+  //   const fetchCages = async () => {
+  //     try {
+  //       const res = await fetch(`/api/cages/getEsp32?userId=${userId}`);
+  //       const data = await res.json();
+  //       if (res.ok) setCages(data.cages);
+  //     } catch (err) {
+  //       console.error("Error fetching cages:", err);
+  //     }
+  //   };
 
-//   useEffect(() => {
-//     fetchCages();
-//   }, []);
+  //   useEffect(() => {
+  //     fetchCages();
+  //   }, []);
 
-//   const handleAdd = async () => {
-//     try {
-//       const res = await fetch("/api/cages/addEsp32", {
-//         method: "POST",
-//         headers: { "Content-Type": "application/json" },
-//         body: JSON.stringify({ ...form, userId }),
-//       });
-//       if (res.ok) {
-//         setShowModal(false);
-//         setForm({ cageName: "", claimCode: "" });
-//         fetchCages();
-//       }
-//     } catch (err) {
-//       console.error("Error adding cage:", err);
-//     }
-//   };
+  //   const handleAdd = async () => {
+  //     try {
+  //       const res = await fetch("/api/cages/addEsp32", {
+  //         method: "POST",
+  //         headers: { "Content-Type": "application/json" },
+  //         body: JSON.stringify({ ...form, userId }),
+  //       });
+  //       if (res.ok) {
+  //         setShowModal(false);
+  //         setForm({ cageName: "", claimCode: "" });
+  //         fetchCages();
+  //       }
+  //     } catch (err) {
+  //       console.error("Error adding cage:", err);
+  //     }
+  //   };
 
-//   const handleDelete = async (cageId) => {
-//     try {
-//       const res = await fetch("/api/cages/deleteEsp32", {
-//         method: "DELETE",
-//         headers: { "Content-Type": "application/json" },
-//         body: JSON.stringify({ userId, cageId }),
-//       });
-//       if (res.ok) fetchCages();
-//     } catch (err) {
-//       console.error("Error deleting cage:", err);
-//     }
-//   };
+  //   const handleDelete = async (cageId) => {
+  //     try {
+  //       const res = await fetch("/api/cages/deleteEsp32", {
+  //         method: "DELETE",
+  //         headers: { "Content-Type": "application/json" },
+  //         body: JSON.stringify({ userId, cageId }),
+  //       });
+  //       if (res.ok) fetchCages();
+  //     } catch (err) {
+  //       console.error("Error deleting cage:", err);
+  //     }
+  //   };
 
   return (
     <div>
@@ -83,7 +85,7 @@ const DevicesPage = () => {
               <div className="flex justify-between mt-4">
                 <button
                   className="bg-blue-500 text-white px-3 py-1 rounded"
-                  onClick={() => (window.location.href = `/dashboard/${c.cageId}`)}
+                  onClick={() => navigate(`/dashboard/${c.cageId}`)}
                 >
                   Xem Dashboard
                 </button>

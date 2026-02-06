@@ -7,26 +7,27 @@ import { BsFillEyeFill } from "react-icons/bs";
 import { authAPI } from '../services/authAPI';
 
 
-const Login = () => {
+const Login: React.FC = () => {
     const navigate = useNavigate();
-    const [userName, setUserName] = useState('');
-    const [password, setPassword] = useState('');
-    const [showPassword, setShowPassword] = useState(false);
+    const [userName, setUserName] = useState<string>('');
+    const [password, setPassword] = useState<string>('');
+    const [showPassword, setShowPassword] = useState<boolean>(false);
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log("Login form submitted", {userName, password});
-        try{
-            const result = await authAPI.login(userName, password);
+        console.log("Login form submitted", { userName, password });
+        try {
+            const result: string = await authAPI.login(userName, password);
             console.log(result)
             console.log("Login successful:", result);
             // localStorage.setItem('token', result.token);
             localStorage.setItem('userId', result);
 
             navigate('/dashboard');
-        } catch(error){
+        } catch (error) {
             console.error("Login  haha error:", error);
-            alert(error.error || "Sai tên đăng nhập hoặc mật khẩu!");
+            const errorMessage = error instanceof Error ? error.message : "Sai tên đăng nhập hoặc mật khẩu!";
+            alert(errorMessage);
         }
     }
 
@@ -96,7 +97,7 @@ const Login = () => {
                             </label>
                             <button
                                 type="button"
-                                onClick={() => router.push("/forgot-password")}
+                                onClick={() => navigate("/forgot-password")}
                                 className="text-yellow-500 hover:underline"
                             >
                                 Quên mật khẩu?
@@ -120,11 +121,11 @@ const Login = () => {
                         </div>
 
                         <div className="text-center text-sm text-gray-600">
-                         <p>TK: Duy - MK: duy123</p>
+                            <p>TK: Duy - MK: duy123</p>
                             Chưa có tài khoản?{" "}
                             <button
                                 type="button"
-                                onClick={() => router.push("/signup")}
+                                onClick={() => navigate("/signup")}
                                 className="text-yellow-500 font-medium hover:underline"
                             >
                                 Đăng ký ngay
