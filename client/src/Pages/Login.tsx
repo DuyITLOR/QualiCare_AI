@@ -5,6 +5,8 @@ import logoIcon from '../assets/quailcare-logo.png';
 import { BsFillEyeSlashFill } from "react-icons/bs";
 import { BsFillEyeFill } from "react-icons/bs";
 import { authAPI } from '../services/authAPI';
+import { toast } from "sonner"
+import Cookies from 'js-cookie';
 
 
 const Login: React.FC = () => {
@@ -12,22 +14,33 @@ const Login: React.FC = () => {
     const [userName, setUserName] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [showPassword, setShowPassword] = useState<boolean>(false);
+    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         console.log("Login form submitted", { userName, password });
         try {
-            const result: string = await authAPI.login(userName, password);
-            console.log(result)
-            console.log("Login successful:", result);
-            // localStorage.setItem('token', result.token);
-            localStorage.setItem('userId', result);
+            setIsSubmitting(true);
+            const result = await authAPI.login(userName, password);
+            
+            Cookies.set('token', result.token, { expires: 7 });
+            Cookies.set('userId', result.userId, { expires: 7 });
 
-            navigate('/dashboard');
+            toast.success("Đăng nhập thành công!", {
+                description: "Chào mừng bạn!",
+            });
+
+            setTimeout(() => {
+                navigate('/dashboard');
+            }, 1000);
         } catch (error) {
             console.error("Login  haha error:", error);
             const errorMessage = error instanceof Error ? error.message : "Sai tên đăng nhập hoặc mật khẩu!";
-            alert(errorMessage);
+            toast.error("Đăng nhập thất bại!", {
+                description: errorMessage,
+            });
+        } finally {
+            setIsSubmitting(false);
         }
     }
 
@@ -107,9 +120,10 @@ const Login: React.FC = () => {
 
                         <button
                             type="submit"
-                            className="w-full h-12 bg-green-800 text-white font-medium rounded-lg hover:opacity-90 transition-opacity"
+                            className="w-full h-12 bg-green-800 text-white font-medium rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+                            disabled={isSubmitting}
                         >
-                            Đăng nhập
+                            {isSubmitting ? "Đang đăng nhập..." : "Đăng nhập"}
                         </button>
 
 
